@@ -11,11 +11,31 @@ import { useGlobalContext } from '../../context/GlobalProvider'
 const SignUp = () => {
     const { setUser, setIsLogged } = useGlobalContext()
 
+    const [isSubmitting, setSubmitting] = useState(false)
     const [form, setForm] = useState({
-      username: '',
-      email: '',
-      password: ''
+      username: "",
+      email: "",
+      password: "",
     })
+
+    const submit = async () => {
+      if(form.username === "" || form.email === "" || form.password === ""){
+        Alert.alert("Error", "Please fill in all fields")
+      }
+
+      setSubmitting(true)
+      try {
+        const result = await createUser(form.email, form.password, form.username)
+        setUser(result)
+        setIsLogged(true)
+
+        router.replace("/home")
+      } catch (error) {
+        Alert.alert("Error", error.message)        
+      }finally{
+        setSubmitting(false)
+      }
+    }
 
     return (
       <SafeAreaView style={styles.safeAreaView}>
@@ -45,12 +65,13 @@ const SignUp = () => {
             />
             <CustomButton
               title="Inscrever-se"
-              handlePress={() => router.push('/success-screen')}
+              handlePress={submit}
+              isLoading={isSubmitting}
             />
 
             <View style={styles.authView}>
               <Text style={styles.textAuthView}>Tem uma conta?</Text>
-              <Link style={styles.linkAuthView} href="/sign-in">Conecte-se</Link>
+              {/* <Link style={styles.linkAuthView} href="/sign-in">Conecte-se</Link> */}
             </View>
           </View>
         </ScrollView>

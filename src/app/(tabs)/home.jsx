@@ -1,94 +1,127 @@
 import React, { useState } from 'react'
-import { StyleSheet, RefreshControl, Text, View, FlatList } from 'react-native'
+import { StyleSheet, Image, RefreshControl, Text, View, FlatList } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import SearchInput from '../../components/SearchInput'
 import Trending from '../../components/Trending'
 import EmptyState from '../../components/EmptyState'
-import {images} from '../../constants'
+import { images } from '../../constants'
+import useAppwrite from '../../lib/useAppwrite'
+import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
+import { useGlobalContext } from '../../context/GlobalProvider'
+import VideoCard from '../../components/VideoCard'
 
 const Home = () => {
+  const {user, setUser} = useGlobalContext()
+
+  const {data: posts, refetch} = useAppwrite(getAllPosts)
+  const {data: latestPosts} = useAppwrite(getLatestPosts)
+
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = async () => {
     setRefreshing(true)
-    //
+    await refetch()
     setRefreshing(false)
   }
 
     return (
       <SafeAreaView style={styles.safeAreaView}>
-        <FlatList 
-          data={[]}
-          keyExtractor={(item) => item.$id}
-          renderItem={({ item }) => (
-            <Text>{item.id}</Text>
-          )}
-          ListHeaderComponent={() => (
-            <View style={styles.mainView}>
-              <View style={styles.textView}>
-                <View>
-                  <Text style={styles.defaultText}>Welcome Back</Text>
-                  <Text style={styles.userText}>Eduardo</Text>
-                </View>
+      <FlatList
+        data={posts}
+        keyExtractor={(item) => item.$id}
+        renderItem={({ item }) => (
+          <VideoCard
+            title={item.title}
+            thumbnail={item.thumbnail}
+            video={item.video}
+            creator={item.creator.username}
+            avatar={item.creator.avatar}
+          />
+        )}
+        ListHeaderComponent={() => (
+          <View style={styles.headerContainer}>
+            <View style={styles.headerContent}>
+              <View>
+                <Text style={styles.welcomeText}>Bem-vindo</Text>
+                <Text style={styles.usernameText}>{user?.username}</Text>
               </View>
+
+              <View style={styles.logoContainer}>
+                <Image
+                  source={images.logoSmall}
+                  style={styles.logo}
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
 
             <SearchInput />
 
-            <View style={{ width: '100%', flex: 1}}>
-              <Text>
-                Latest Videos
-              </Text>
-
-              <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }] ?? []}/>
+            <View style={styles.latestVideosContainer}>
+              <Text style={styles.latestVideosText}>Latest Videos</Text>
+              <Trending posts={latestPosts ?? []} />
             </View>
-            </View>
-          )}
-          ListEmptyComponent={() => (
-            <EmptyState
-              title="No posts found"
-              subtitle="Be the first"
-            />
-          )}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refreshing} />}
-        />
-      </SafeAreaView>
+          </View>
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title="No Videos Found"
+            subtitle="No videos created yet"
+          />
+        )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      />
+    </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
   safeAreaView: {
-    backgroundColor: 'black',
-    height: '100%'
-  },  
-  mainView: {
-    display: 'flex',
-    marginLeft: 28,
-    marginRight: 28,
-    paddingLeft: 16,
-    paddingRight: 16,
-    marginTop: 24
+    flex: 1,
+    backgroundColor: '#1a1a2e', // Exemplo de cor primária
   },
-  textView: {
-    display: 'flex',
+  headerContainer: {
+    flex: 1,
+    marginVertical: 24,
+    paddingHorizontal: 16,
+    spaceY: 24,
+  },
+  headerContent: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    marginBottom: 24,
   },
-  defaultText: {
+  welcomeText: {
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
-    lineHeight: 20,
-    color: 'grey'
+    color: '#d1d5db', // Exemplo de cor para texto cinza
   },
-  userText: {
+  usernameText: {
+    fontSize: 24,
     fontFamily: 'Poppins-SemiBold',
-    fontSize:20,
-    lineHeight: 20,
-    color: 'grey'
+    color: '#ffffff', // Cor do nome de usuário
   },
-  postView: {
-    flex: 1,
-    width: '100%'
-  }
-})
+  logoContainer: {
+    marginTop: 6,
+  },
+  logo: {
+    width: 36,
+    height: 40,
+  },
+  latestVideosContainer: {
+    width: '100%',
+    paddingTop: 20,
+    paddingBottom: 32,
+  },
+  latestVideosText: {
+    fontSize: 18,
+    fontFamily: 'Poppins-Regular',
+    color: '#d1d5db', // Exemplo de cor para texto cinza
+    marginBottom: 12,
+  },
+});
 
 export default Home

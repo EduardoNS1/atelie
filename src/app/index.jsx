@@ -6,12 +6,13 @@ import { scale, verticalScale, moderateScale } from 'react-native-size-matters'
 import COLORS from '../constants/colors'
 
 import { images } from '../constants' 
-
 import CustomButton from '../components/CustomButton'
-
 import { useGlobalContext } from '../context/GlobalProvider'
 
 export default function App(){
+    const {loading, isLogged} = useGlobalContext()
+    if(!loading && isLogged) return <Redirect href="/home"/>
+
     return (
         <SafeAreaView style={styles.safeAreaView}>
             <ScrollView style={styles.scrollView}>
