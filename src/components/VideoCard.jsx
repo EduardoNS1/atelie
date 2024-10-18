@@ -3,7 +3,7 @@ import { ResizeMode, Video } from "expo-av";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { icons } from "../constants";
 
-const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
+const VideoCard = ({ title, creator, avatar, thumbnail }) => {
   const [play, setPlay] = useState(false);
 
   return (
@@ -32,21 +32,6 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
           <Image source={icons.menu} style={styles.menuImage} resizeMode="contain" />
         </View>
       </View>
-
-      {play ? (
-        <Video
-          source={{ uri: video }}
-          style={styles.video}
-          resizeMode={ResizeMode.CONTAIN}
-          useNativeControls
-          shouldPlay
-          onPlaybackStatusUpdate={(status) => {
-            if (status.didJustFinish) {
-              setPlay(false);
-            }
-          }}
-        />
-      ) : (
         <TouchableOpacity
           activeOpacity={0.7}
           onPress={() => setPlay(true)}
@@ -58,13 +43,7 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
             resizeMode="cover"
           />
 
-          <Image
-            source={icons.play}
-            style={styles.playIcon}
-            resizeMode="contain"
-          />
         </TouchableOpacity>
-      )}
     </View>
   );
 };

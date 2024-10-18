@@ -69,7 +69,7 @@ const SignIn = () => {
                 placeholder="Senha"
                 handleChangeText={(e) => setForm({ ...form, password: e})}
               />
-              <Link style={styles.linkRouter} href="/forgot-password">Esqueceu sua senha?</Link>
+              
               <CustomButton
                 title="Entrar"
                 handlePress={submit}
@@ -78,7 +78,7 @@ const SignIn = () => {
 
               <View style={styles.authView}>
                 <Text style={styles.textAuthView}>Não tem uma conta?</Text>
-                {/* <Link style={styles.linkAuthView} href="/sign-up">Cadastre-se</Link> */}
+                <Link style={styles.linkAuthView} href="/sign-up">Cadastre-se</Link>
               </View>
             </View>
           </View>

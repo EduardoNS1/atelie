@@ -16,7 +16,6 @@ const Create = () => {
   const [uploading, setUploading] = useState(false)
   const [form, setForm] = useState({
     title: "",
-    video: null,
     thumbnail: null,
     prompt: "",
   })
@@ -36,13 +35,6 @@ const Create = () => {
           thumbnail: result.assets[0],
         })
       }
-
-      if (selectType === "video") {
-        setForm({
-          ...form,
-          video: result.assets[0],
-        })
-      }
     } else {
       setTimeout(() => {
         Alert.alert("Document picked", JSON.stringify(result, null, 2))
@@ -54,8 +46,7 @@ const Create = () => {
     if (
       (form.prompt === "") |
       (form.title === "") |
-      !form.thumbnail |
-      !form.video
+      !form.thumbnail
     ) {
       return Alert.alert("Please provide all fields")
     }
@@ -74,7 +65,6 @@ const Create = () => {
     } finally {
       setForm({
         title: "",
-        video: null,
         thumbnail: null,
         prompt: "",
       })
@@ -87,17 +77,17 @@ const Create = () => {
     <SafeAreaView style={styles.safeAreaView}>
       <ScrollView>
         <View style={styles.mainView}>
-          <Text style={styles.title}>Upload Video</Text>
+          <Text style={styles.title}>Criar postagem</Text>
 
           <FormField
-            title="Video Title"
+            title="Título"
             value={form.title}
-            placeholder="Give your video a catchy title..."
+            placeholder="Adicione um título..."
             handleChangeText={(e) => setForm({ ...form, title: e })}
             otherStyles={styles.formField}
           />
 
-          <View style={styles.uploadContainer}>
+          {/* <View style={styles.uploadContainer}>
             <Text style={styles.label}>Upload Video</Text>
 
             <TouchableOpacity onPress={() => openPicker("video")}>
@@ -121,7 +111,7 @@ const Create = () => {
                 </View>
               )}
             </TouchableOpacity>
-          </View>
+            </View> */}
 
           <View style={styles.uploadContainer}>
             <Text style={styles.label}>Thumbnail Image</Text>

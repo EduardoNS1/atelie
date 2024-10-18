@@ -71,7 +71,7 @@ const SignUp = () => {
 
             <View style={styles.authView}>
               <Text style={styles.textAuthView}>Tem uma conta?</Text>
-              {/* <Link style={styles.linkAuthView} href="/sign-in">Conecte-se</Link> */}
+              <Link style={styles.linkAuthView} href="/sign-in">Conecte-se</Link>
             </View>
           </View>
         </ScrollView>

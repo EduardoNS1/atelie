@@ -5,7 +5,7 @@ import { StyleSheet } from "react-native";
 const Bookmark = () => {
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <Text style={styles.title}>Bookmark</Text>
+      <Text style={styles.title}>Artigos</Text>
     </SafeAreaView>
   );
 };
