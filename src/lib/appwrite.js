@@ -16,6 +16,7 @@ import {
     databaseId: "670720d000343b87933f",
     userCollectionId: "670720e8002fc3dd7609",
     videoCollectionId: "670eadf7002f65d3ee9a",
+    articlesCollectionId: "67169dcc002ad22bfbab"
   };
   
   const client = new Client();
@@ -218,6 +219,19 @@ import {
       );
   
       return posts.documents;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  export async function getAllArticles() {
+    try {
+      const articles = await databases.listDocuments(
+        appwriteConfig.databaseId,
+        appwriteConfig.articlesCollectionId,
+      );
+
+      return articles.documents;
     } catch (error) {
       throw new Error(error);
     }

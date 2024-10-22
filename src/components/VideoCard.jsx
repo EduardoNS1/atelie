@@ -3,7 +3,7 @@ import { ResizeMode, Video } from "expo-av";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { icons } from "../constants";
 
-const VideoCard = ({ title, creator, avatar, thumbnail }) => {
+const VideoCard = ({ title, creator, avatar, thumbnail, prompt }) => {
   const [play, setPlay] = useState(false);
 
   return (
@@ -22,28 +22,22 @@ const VideoCard = ({ title, creator, avatar, thumbnail }) => {
             <Text style={styles.title} numberOfLines={1}>
               {title}
             </Text>
+            <Text>
+              {prompt}
+            </Text>
             <Text style={styles.creator} numberOfLines={1}>
               {creator}
             </Text>
           </View>
         </View>
-
-        <View style={styles.menuIcon}>
-          <Image source={icons.menu} style={styles.menuImage} resizeMode="contain" />
-        </View>
-      </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => setPlay(true)}
-          style={styles.thumbnailContainer}
-        >
+      </View >
+        <View style={styles.thumbnailContainer}>
           <Image
             source={{ uri: thumbnail }}
             style={styles.thumbnail}
             resizeMode="cover"
           />
-
-        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -70,7 +64,7 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 12,
-    borderColor: '#yourSecondaryColor', // Substitua pelo valor de sua cor secundária
+    borderColor: '#FFF', // Substitua pelo valor de sua cor secundária
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -79,7 +73,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: '100%',
     height: '100%',
-    borderRadius: 12,
+    borderRadius: 1,
   },
   infoContainer: {
     justifyContent: 'center',
@@ -89,12 +83,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 14,
-    color: '#fff', // Cor do texto
+    color: '#000', // Cor do texto
     fontWeight: '600', // Ajuste conforme seu tema
   },
   creator: {
     fontSize: 12,
-    color: '#ccc', // Cor do texto
+    color: '#000', // Cor do texto
     fontWeight: '400', // Ajuste conforme seu tema
   },
   menuIcon: {
@@ -112,7 +106,7 @@ const styles = StyleSheet.create({
   },
   thumbnailContainer: {
     width: '100%',
-    height: 240,
+    height: 540,
     borderRadius: 12,
     marginTop: 12,
     justifyContent: 'center',
@@ -122,7 +116,7 @@ const styles = StyleSheet.create({
   thumbnail: {
     width: '100%',
     height: '100%',
-    borderRadius: 12,
+    borderRadius: 0,
   },
   playIcon: {
     width: 48,

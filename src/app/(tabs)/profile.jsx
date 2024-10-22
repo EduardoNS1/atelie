@@ -86,7 +86,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#yourPrimaryColor', // substitua pelo valor real
+    backgroundColor: '#FFF', // substitua pelo valor real
   },
   headerContainer: {
     width: '100%',

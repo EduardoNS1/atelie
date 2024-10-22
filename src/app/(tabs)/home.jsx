@@ -32,6 +32,7 @@ const Home = () => {
         renderItem={({ item }) => (
           <VideoCard
             title={item.title}
+            prompt={item.prompt}
             thumbnail={item.thumbnail}
             creator={item.creator.username}
             avatar={item.creator.avatar}
@@ -79,7 +80,7 @@ const Home = () => {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#1a1a2e', // Exemplo de cor primária
+    backgroundColor: '#FFF', // Exemplo de cor primária
   },
   headerContainer: {
     flex: 1,
@@ -96,12 +97,12 @@ const styles = StyleSheet.create({
   welcomeText: {
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
-    color: '#d1d5db', // Exemplo de cor para texto cinza
+    color: '#000', // Exemplo de cor para texto cinza
   },
   usernameText: {
     fontSize: 24,
     fontFamily: 'Poppins-SemiBold',
-    color: '#ffffff', // Cor do nome de usuário
+    color: '#000', // Cor do nome de usuário
   },
   logoContainer: {
     marginTop: 6,
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
   latestVideosText: {
     fontSize: 18,
     fontFamily: 'Poppins-Regular',
-    color: '#d1d5db', // Exemplo de cor para texto cinza
+    color: '#000', // Exemplo de cor para texto cinza
     marginBottom: 12,
   },
 });

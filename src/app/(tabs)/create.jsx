@@ -1,15 +1,16 @@
-import { useState } from "react";
-import { router } from "expo-router";
-import { ResizeMode, Video } from "expo-av";
+import { useEffect, useState } from "react";
+import { Link, router } from 'expo-router'
 import * as DocumentPicker from "expo-document-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, View, Text, Alert, Image, TouchableOpacity, ScrollView } from "react-native"
+import { StyleSheet, View, Text, Alert, Image, TouchableOpacity, ScrollView, Platform } from "react-native"
 
 import { icons } from "../../constants";
 import { createVideoPost } from "../../lib/appwrite";
 import FormField from "../../components/FormField";
+import DescriptionFormField from "../../components/DescriptionFormField";
 import CustomButton from "../../components/CustomButton";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import TestFormField from "../../components/TestFormField";
 
 const Create = () => {
   const { user } = useGlobalContext()
@@ -75,83 +76,61 @@ const Create = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView}>
-      <ScrollView>
-        <View style={styles.mainView}>
-          <Text style={styles.title}>Criar postagem</Text>
+        <ScrollView>
+          <View style={styles.mainView}>
 
-          <FormField
-            title="Título"
-            value={form.title}
-            placeholder="Adicione um título..."
-            handleChangeText={(e) => setForm({ ...form, title: e })}
-            otherStyles={styles.formField}
-          />
+            <View style={styles.returnButtonView}>
+                <Link style={{ height: 30 }} href="/home">
+                  <Image
+                    source={icons.arrowback}
+                    resizeMode="contain"
+                    style={styles.uploadReturnIcon}
+                  />
+                </Link>
+            </View>
 
-          {/* <View style={styles.uploadContainer}>
-            <Text style={styles.label}>Upload Video</Text>
-
-            <TouchableOpacity onPress={() => openPicker("video")}>
-              {form.video ? (
-                <Video
-                  source={{ uri: form.video.uri }}
-                  style={styles.videoPreview}
-                  useNativeControls
-                  resizeMode={ResizeMode.COVER}
-                  isLooping
-                />
-              ) : (
-                <View style={styles.uploadPlaceholder}>
-                  <View style={styles.uploadIconContainer}>
+            <View style={styles.uploadContainer}>
+              <TouchableOpacity onPress={() => openPicker("image")}>
+                {form.thumbnail ? (
+                  <Image
+                    source={{ uri: form.thumbnail.uri }}
+                    resizeMode="cover"
+                    style={styles.thumbnailPreview}
+                  />
+                ) : (
+                  <View style={styles.thumbnailPlaceholder}>
                     <Image
-                      source={icons.upload}
+                      source={icons.cameraicon}
                       resizeMode="contain"
-                      style={styles.uploadIcon}
+                      style={styles.uploadIconSmall}
                     />
                   </View>
-                </View>
-              )}
-            </TouchableOpacity>
-            </View> */}
+                )}
+              </TouchableOpacity>
+            </View>
+            
+            <TestFormField
+              value={form.title}
+              placeholder="Dê um nome para sua criação..."
+              handleChangeText={(e) => setForm({ ...form, title: e })}
+              otherStyles={styles.formField}
+            />
 
-          <View style={styles.uploadContainer}>
-            <Text style={styles.label}>Thumbnail Image</Text>
+            <DescriptionFormField
+              value={form.prompt}
+              placeholder="Este é seu momento de brilhar! Conte-nos tudo sobre essa produção..."
+              handleChangeText={(e) => setForm({ ...form, prompt: e })}
+              otherStyles={styles.formField}
+            />
 
-            <TouchableOpacity onPress={() => openPicker("image")}>
-              {form.thumbnail ? (
-                <Image
-                  source={{ uri: form.thumbnail.uri }}
-                  resizeMode="cover"
-                  style={styles.thumbnailPreview}
-                />
-              ) : (
-                <View style={styles.thumbnailPlaceholder}>
-                  <Image
-                    source={icons.upload}
-                    resizeMode="contain"
-                    style={styles.uploadIconSmall}
-                  />
-                  <Text style={styles.chooseFileText}>Choose a file</Text>
-                </View>
-              )}
-            </TouchableOpacity>
+            <CustomButton
+              title="Enviar & Publicar"
+              handlePress={submit}
+              containerStyles={styles.submitButton}
+              isLoading={uploading}
+            />
           </View>
-
-          <FormField
-            title="AI Prompt"
-            value={form.prompt}
-            placeholder="The AI prompt of your video...."
-            handleChangeText={(e) => setForm({ ...form, prompt: e })}
-            otherStyles={styles.formField}
-          />
-
-          <CustomButton
-            title="Submit & Publish"
-            handlePress={submit}
-            containerStyles={styles.submitButton}
-            isLoading={uploading}
-          />
-        </View>
-      </ScrollView>
+        </ScrollView>
     </SafeAreaView>
   )
 }
@@ -167,6 +146,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
+  returnButtonView: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   title: {
     fontSize: 28,
     color: '#000',
@@ -181,7 +164,7 @@ const styles = StyleSheet.create({
     spaceY: 2,
   },
   label: {
-    fontSize: 16,
+    fontSize: 6,
     color: '#000',
     fontFamily: 'Poppins-Medium',
   },
@@ -216,33 +199,37 @@ const styles = StyleSheet.create({
   },
   thumbnailPreview: {
     width: '100%',
-    height: 256,
-    borderRadius: 16,
+    height: 340,
   },
   thumbnailPlaceholder: {
+    marginTop: 10,
     width: '100%',
-    height: 64,
-    backgroundColor: '#1c1c1e',
-    borderRadius: 16,
-    borderColor: '#ccc',
-    borderWidth: 2,
+    height: 340,
+    backgroundColor: '#F0F0F0',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   uploadIconSmall: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
+    width: 80,
+    height: 80,
+  },
+  uploadReturnIcon: {
+    width: 25,
+    height: 25,
   },
   chooseFileText: {
-    fontSize: 14,
-    color: '#fff',
+    fontSize: 27,
+    color: '#000',
     fontFamily: 'Poppins-Medium',
   },
   submitButton: {
     marginTop: 20,
   },
+  viewTextInput: {
+    height: 200,
+    color: '#000'
+  }
 })
 
 export default Create
