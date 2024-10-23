@@ -21,21 +21,25 @@ const TAB_CONFIG = [
     name: "home",           // Nome da rota
     title: "Home",         // Título que aparece abaixo do ícone
     icon: "compass",         // Nome do ícone do Feather
+    shown: false,
   },
   {
     name: "articles",
     title: "Artigos",
     icon: "file-text",
+    shwon: "true",
   },
   {
     name: "create",
     title: "Criar",
     icon: "plus-circle",
+    shown: false,
   },
   {
     name: "profile",
     title: "Perfil",
     icon: "user",
+    shown: false,
   },
 ];
 
@@ -78,7 +82,11 @@ const TabLayout = () => {
             name={tab.name}   // Nome da rota
             options={{
               title: tab.title,
-              headerShown: false,
+              headerShown: tab.shown,
+              headerTitleAlign: "center",
+              headerStyle: {
+                backgroundColor: THEME.colors.background,
+              },
               tabBarIcon: ({ color, focused }) => (
                 <TabIcon
                   icon={tab.icon}
@@ -93,7 +101,7 @@ const TabLayout = () => {
       </Tabs>
 
       <Loader isLoading={loading} />
-      <StatusBar backgroundColor={THEME.colors.background} style="light" />
+      <StatusBar backgroundColor={THEME.colors.background} style="dark" />
     </>
   );
 };
@@ -114,7 +122,7 @@ const styles = StyleSheet.create({
     height: 55,
     paddingBottom: 8,
     elevation: 8,             // Sombra no Android
-    shadowColor: "#000",      // Cor da sombra no iOS
+    shadowColor: THEME.colors.primary,      // Cor da sombra no iOS
     shadowOffset: {
       width: 0,
       height: -2,

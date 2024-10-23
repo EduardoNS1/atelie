@@ -1,21 +1,16 @@
 import React, { useState } from 'react'
-import { StyleSheet, Image, RefreshControl, Text, View, FlatList } from 'react-native'
+import { StyleSheet, Image, RefreshControl, Text, View, FlatList, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { Feather } from '@expo/vector-icons'
 import SearchInput from '../../components/SearchInput'
-import Trending from '../../components/Trending'
-import EmptyState from '../../components/EmptyState'
-import { images } from '../../constants'
 import useAppwrite from '../../lib/useAppwrite'
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import VideoCard from '../../components/VideoCard'
 
 const Home = () => {
-  const {user, setUser} = useGlobalContext()
-
+  const { user } = useGlobalContext()
   const {data: posts, refetch} = useAppwrite(getAllPosts)
-  const {data: latestPosts} = useAppwrite(getLatestPosts)
-
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = async () => {
@@ -24,15 +19,15 @@ const Home = () => {
     setRefreshing(false)
   }
 
-    return (
-      <SafeAreaView style={styles.safeAreaView}>
+  return (
+    <SafeAreaView style={styles.safeAreaView}>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <VideoCard
             title={item.title}
-            prompt={item.prompt}
+            description={item.description}
             thumbnail={item.thumbnail}
             creator={item.creator.username}
             avatar={item.creator.avatar}
@@ -40,87 +35,159 @@ const Home = () => {
         )}
         ListHeaderComponent={() => (
           <View style={styles.headerContainer}>
+            {/* Header com Saudação e Logo */}
             <View style={styles.headerContent}>
-              <View>
-                <Text style={styles.welcomeText}>Bem-vindo</Text>
+              <View style={styles.greetingContainer}>
+                <Text style={styles.welcomeText}>Bem-vindo de volta,</Text>
                 <Text style={styles.usernameText}>{user?.username}</Text>
               </View>
 
               <View style={styles.logoContainer}>
-                <Image
-                  source={images.logoSmall}
-                  style={styles.logo}
-                  resizeMode="contain"
-                />
               </View>
             </View>
 
-            <SearchInput />
+            {/* Barra de Pesquisa com Ícone */}
+            <View style={styles.searchContainer}>
+              <SearchInput />
+              <View style={styles.filterButton}>
+                <Feather name="sliders" size={20} color="#666" />
+              </View>
+            </View>
 
-            <View style={styles.latestVideosContainer}>
-              <Text style={styles.latestVideosText}>Latest Videos</Text>
-              <Trending posts={latestPosts ?? []} />
+            {/* Separador para Feed Principal */}
+            <View style={styles.feedHeader}>
+              <Text style={styles.feedTitle}>Feed</Text>
+              <View style={styles.feedDivider} />
             </View>
           </View>
         )}
         ListEmptyComponent={() => (
-          <EmptyState
-            title="No Videos Found"
-            subtitle="No videos created yet"
-          />
+          <View style={styles.emptyContainer}>
+            <Feather name="inbox" size={48} color="#666" />
+            <Text style={styles.emptyText}>Nenhum post encontrado</Text>
+          </View>
         )}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
-    )
+  )
 }
 
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#FFF', // Exemplo de cor primária
+    backgroundColor: '#FAFAFA',
+  },
+  contentContainer: {
+    paddingBottom: 20,
   },
   headerContainer: {
-    flex: 1,
-    marginVertical: 24,
     paddingHorizontal: 16,
-    spaceY: 24,
+    paddingTop: 8,
+    backgroundColor: '#FAFAFA',
   },
   headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 24,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  greetingContainer: {
+    flex: 1,
   },
   welcomeText: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Poppins-Regular',
     fontSize: 14,
-    color: '#000', // Exemplo de cor para texto cinza
+    color: '#666',
+    marginBottom: 4,
   },
   usernameText: {
     fontSize: 24,
-    fontFamily: 'Poppins-SemiBold',
-    color: '#000', // Cor do nome de usuário
+    fontFamily: 'Poppins-Bold',
+    color: '#1A1A1A',
   },
   logoContainer: {
-    marginTop: 6,
+    backgroundColor: '#FFF',
+    borderRadius: 12,
+    padding: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   logo: {
-    width: 36,
-    height: 40,
+    width: 32,
+    height: 32,
   },
-  latestVideosContainer: {
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 24,
+  },
+  filterButton: {
+    backgroundColor: '#FFF',
+    padding: 12,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 32,
+    gap: 16,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontFamily: 'Poppins-SemiBold',
+    color: '#1A1A1A',
+  },
+  seeAllButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  seeAllText: {
+    fontSize: 14,
+    fontFamily: 'Poppins-Medium',
+    color: '#666',
+  },
+  feedHeader: {
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  feedTitle: {
+    fontSize: 20,
+    fontFamily: 'Poppins-SemiBold',
+    color: '#1A1A1A',
+    marginBottom: 8,
+  },
+  feedDivider: {
+    height: 4,
+    backgroundColor: '#E5E5E5',
+    borderRadius: 2,
     width: '100%',
-    paddingTop: 20,
-    paddingBottom: 32,
-  },
-  latestVideosText: {
-    fontSize: 18,
-    fontFamily: 'Poppins-Regular',
-    color: '#000', // Exemplo de cor para texto cinza
-    marginBottom: 12,
   },
 });
 

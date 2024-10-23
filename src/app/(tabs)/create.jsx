@@ -5,8 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet, View, Text, Alert, Image, TouchableOpacity, ScrollView, Platform } from "react-native"
 
 import { icons } from "../../constants";
-import { createVideoPost } from "../../lib/appwrite";
-import FormField from "../../components/FormField";
+import { createPost } from "../../lib/appwrite";
 import DescriptionFormField from "../../components/DescriptionFormField";
 import CustomButton from "../../components/CustomButton";
 import { useGlobalContext } from "../../context/GlobalProvider";
@@ -18,7 +17,7 @@ const Create = () => {
   const [form, setForm] = useState({
     title: "",
     thumbnail: null,
-    prompt: "",
+    description: "",
   })
 
   const openPicker = async (selectType) => {
@@ -38,23 +37,23 @@ const Create = () => {
       }
     } else {
       setTimeout(() => {
-        Alert.alert("Document picked", JSON.stringify(result, null, 2))
+        Alert.alert("Lembre-se: você precisa selecionar uma foto para avançar")
       }, 100)
     }
   }
 
   const submit = async () => {
     if (
-      (form.prompt === "") |
+      (form.description === "") |
       (form.title === "") |
       !form.thumbnail
     ) {
-      return Alert.alert("Please provide all fields")
+      return Alert.alert("Quase lá! Apenas preencha todos os campos para continuar.")
     }
 
     setUploading(true)
     try {
-      await createVideoPost({
+      await createPost({
         ...form,
         userId: user.$id,
       })
@@ -67,7 +66,7 @@ const Create = () => {
       setForm({
         title: "",
         thumbnail: null,
-        prompt: "",
+        description: "",
       })
 
       setUploading(false)
@@ -117,9 +116,9 @@ const Create = () => {
             />
 
             <DescriptionFormField
-              value={form.prompt}
+              value={form.description}
               placeholder="Este é seu momento de brilhar! Conte-nos tudo sobre essa produção..."
-              handleChangeText={(e) => setForm({ ...form, prompt: e })}
+              handleChangeText={(e) => setForm({ ...form, description: e })}
               otherStyles={styles.formField}
             />
 

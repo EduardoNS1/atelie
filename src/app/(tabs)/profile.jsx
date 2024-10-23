@@ -1,12 +1,10 @@
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Image, FlatList, TouchableOpacity, StyleSheet } from "react-native";
-
-import { icons } from "../../constants";
+import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { Feather } from '@expo/vector-icons';
 import useAppwrite from "../../lib/useAppwrite";
 import { getUserPosts, signOut } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import EmptyState from "../../components/EmptyState";
 import InfoBox from "../../components/InfoBox";
 import VideoCard from "../../components/VideoCard";
 
@@ -36,10 +34,10 @@ const Profile = () => {
           />
         )}
         ListEmptyComponent={() => (
-          <EmptyState
-            title="No Videos Found"
-            subtitle="No videos found for this profile"
-          />
+          <View style={styles.emptyContainer}>
+            <Feather name="inbox" size={48} color="#666" />
+            <Text style={styles.emptyText}>Nenhum post encontrado</Text>
+          </View>
         )}
         ListHeaderComponent={() => (
           <View style={styles.headerContainer}>
@@ -47,11 +45,7 @@ const Profile = () => {
               onPress={logout}
               style={styles.logoutButton}
             >
-              <Image
-                source={icons.logout}
-                resizeMode="contain"
-                style={styles.logoutIcon}
-              />
+              <Feather name="log-out" size={28} color="#666" />
             </TouchableOpacity>
 
             <View style={styles.avatarContainer}>
@@ -101,10 +95,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: 10,
   },
-  logoutIcon: {
-    width: 24,
-    height: 24,
-  },
   avatarContainer: {
     width: 64,
     height: 64,
@@ -131,6 +121,12 @@ const styles = StyleSheet.create({
   },
   postsContainer: {
     marginRight: 10,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 32,
+    gap: 16,
   },
 });
 

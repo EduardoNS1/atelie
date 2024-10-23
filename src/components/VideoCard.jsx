@@ -1,42 +1,103 @@
 import { useState } from "react";
-import { ResizeMode, Video } from "expo-av";
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import { icons } from "../constants";
+import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator } from "react-native";
+import { Feather } from '@expo/vector-icons';
 
-const VideoCard = ({ title, creator, avatar, thumbnail, prompt }) => {
-  const [play, setPlay] = useState(false);
+
+const VideoCard = ({ title, creator, avatar, thumbnail, description, datetime }) => {
+  const [expanded, setExpanded] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageRatio, setImageRatio] = useState(1); // 1:1 por padrão
+
+  // Função para verificar as dimensões da imagem
+  const onImageLoad = (event) => {
+    const { source } = event.nativeEvent;
+  
+    if (source && source.width && source.height) {
+      const { width, height } = source;
+      const ratio = height / width;
+      setImageRatio(ratio);
+      setImageLoaded(true);
+    } else {
+      console.warn('O evento de carregamento da imagem não contém as dimensões da fonte');
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.avatarContainer}>
+      {/* Cabeçalho com Avatar e Informações */}
+      <View style={styles.headerContainer}>
+        <View style={styles.userInfo}>
           <View style={styles.avatarWrapper}>
-            <Image
-              source={{ uri: avatar }}
-              style={styles.avatar}
-              resizeMode="cover"
-            />
+            {avatar ? (
+              <Image
+                source={{ uri: avatar }}
+                style={styles.avatar}
+                resizeMode="cover"
+              />
+            ) : (
+              <View style={[styles.avatar, styles.avatarPlaceholder]}>
+                <Text style={styles.avatarText}>{creator?.[0]?.toUpperCase()}</Text>
+              </View>
+            )}
           </View>
 
-          <View style={styles.infoContainer}>
-            <Text style={styles.title} numberOfLines={1}>
-              {title}
-            </Text>
-            <Text>
-              {prompt}
-            </Text>
+          <View style={styles.textContainer}>
             <Text style={styles.creator} numberOfLines={1}>
               {creator}
             </Text>
+            <Text style={styles.timeText}>{new Date(datetime).toLocaleDateString()}</Text>
           </View>
         </View>
-      </View >
-        <View style={styles.thumbnailContainer}>
-          <Image
-            source={{ uri: thumbnail }}
-            style={styles.thumbnail}
-            resizeMode="cover"
-          />
+
+        <TouchableOpacity style={styles.menuButton}>
+          <Feather name="more-horizontal" size={24} color="#666" />
+        </TouchableOpacity>
+      </View>
+
+      {/* Thumbnail com proporção ajustável */}
+      <View style={[
+        styles.thumbnailContainer,
+        { aspectRatio: imageRatio > 1.25 ? 1080/1350 : 1 } // 1080:1350 para vertical, 1:1 para quadrado
+      ]}>
+        <Image
+          source={{ uri: thumbnail }}
+          style={styles.thumbnail}
+          resizeMode="cover"
+          onLoad={onImageLoad}
+        />
+        {!imageLoaded && (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#666" />
+          </View>
+        )}
+      </View>
+
+      {/* Conteúdo do Post */}
+      <View style={styles.contentContainer}>
+
+        {/* Título e Legenda */}
+        <View style={styles.textContent}>
+          <Text style={styles.title} numberOfLines={2}>
+            {title}
+          </Text>
+
+          <Text 
+            style={styles.prompt}
+            numberOfLines={expanded ? undefined : 2}
+          >
+            {description}
+          </Text>
+          {description?.length > 100 && (
+            <TouchableOpacity 
+              onPress={() => setExpanded(!expanded)}
+              style={styles.expandButton}
+            >
+              <Text style={styles.expandButtonText}>
+                {expanded ? 'Ver menos' : 'Ver mais'}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
     </View>
   );
@@ -44,84 +105,116 @@ const VideoCard = ({ title, creator, avatar, thumbnail, prompt }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    marginBottom: 56,
+    backgroundColor: '#FFF',
+    marginBottom: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  header: {
+  headerContainer: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
-    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
   },
-  avatarContainer: {
+  userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
   },
   avatarWrapper: {
-    width: 46,
-    height: 46,
-    borderRadius: 12,
-    borderColor: '#FFF', // Substitua pelo valor de sua cor secundária
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 1,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    overflow: 'hidden',
+    backgroundColor: '#F0F0F0',
   },
   avatar: {
     width: '100%',
     height: '100%',
-    borderRadius: 1,
   },
-  infoContainer: {
+  avatarPlaceholder: {
+    backgroundColor: '#E0E0E0',
     justifyContent: 'center',
-    flex: 1,
-    marginLeft: 12,
-    gap: 4,
+    alignItems: 'center',
   },
-  title: {
-    fontSize: 14,
-    color: '#000', // Cor do texto
-    fontWeight: '600', // Ajuste conforme seu tema
+  avatarText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#666',
+  },
+  textContainer: {
+    marginLeft: 12,
   },
   creator: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#1A1A1A',
+  },
+  timeText: {
     fontSize: 12,
-    color: '#000', // Cor do texto
-    fontWeight: '400', // Ajuste conforme seu tema
+    color: '#666',
+    marginTop: 2,
   },
-  menuIcon: {
-    paddingTop: 8,
-  },
-  menuImage: {
-    width: 20,
-    height: 20,
-  },
-  video: {
-    width: '100%',
-    height: 240,
-    borderRadius: 12,
-    marginTop: 12,
+  menuButton: {
+    padding: 4,
   },
   thumbnailContainer: {
     width: '100%',
-    height: 540,
-    borderRadius: 12,
-    marginTop: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#F0F0F0',
     position: 'relative',
   },
   thumbnail: {
     width: '100%',
     height: '100%',
-    borderRadius: 0,
   },
-  playIcon: {
-    width: 48,
-    height: 48,
+  loadingContainer: {
     position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F0F0F0',
+  },
+  contentContainer: {
+    marginLeft: 10,
+    marginRight: 14
+  },
+  interactionBar: {
+    flexDirection: 'row',
+    marginBottom: 12,
+  },
+  textContent: {
+    marginTop: 4,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1A1A1A',
+    marginBottom: 8,
+  },
+  prompt: {
+    fontSize: 14,
+    color: '#4A4A4A',
+    lineHeight: 20,
+  },
+  expandButton: {
+    marginTop: 4,
+    paddingVertical: 4,
+  },
+  expandButtonText: {
+    color: '#666',
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
 

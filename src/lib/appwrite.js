@@ -15,7 +15,7 @@ import {
     storageId: "6707217f0002ba6a1648",
     databaseId: "670720d000343b87933f",
     userCollectionId: "670720e8002fc3dd7609",
-    videoCollectionId: "670eadf7002f65d3ee9a",
+    postsCollectionId: "670eadf7002f65d3ee9a",
     articlesCollectionId: "67169dcc002ad22bfbab"
   };
   
@@ -169,7 +169,7 @@ import {
   }
   
   // Create Video Post
-  export async function createVideoPost(form) {
+  export async function createPost(form) {
     try {
       const [thumbnailUrl, videoUrl] = await Promise.all([
         uploadFile(form.thumbnail, "image"),
@@ -178,14 +178,13 @@ import {
   
       const newPost = await databases.createDocument(
         appwriteConfig.databaseId,
-        appwriteConfig.videoCollectionId,
+        appwriteConfig.postsCollectionId,
         ID.unique(),
         {
           title: form.title,
           thumbnail: thumbnailUrl,
-          video: videoUrl,
-          prompt: form.prompt,
-          creator: form.userId,
+          description: form.description,
+          creator: form.userId, 
         }
       );
   
@@ -200,7 +199,7 @@ import {
     try {
       const posts = await databases.listDocuments(
         appwriteConfig.databaseId,
-        appwriteConfig.videoCollectionId
+        appwriteConfig.postsCollectionId
       );
   
       return posts.documents;
@@ -214,7 +213,7 @@ import {
     try {
       const posts = await databases.listDocuments(
         appwriteConfig.databaseId,
-        appwriteConfig.videoCollectionId,
+        appwriteConfig.postsCollectionId,
         [Query.equal("creator", userId)]
       );
   
@@ -242,26 +241,11 @@ import {
     try {
       const posts = await databases.listDocuments(
         appwriteConfig.databaseId,
-        appwriteConfig.videoCollectionId,
+        appwriteConfig.postsCollectionId,
         [Query.search("title", query)]
       );
   
       if (!posts) throw new Error("Something went wrong");
-  
-      return posts.documents;
-    } catch (error) {
-      throw new Error(error);
-    }
-  }
-  
-  // Get latest created video posts
-  export async function getLatestPosts() {
-    try {
-      const posts = await databases.listDocuments(
-        appwriteConfig.databaseId,
-        appwriteConfig.videoCollectionId,
-        [Query.orderDesc("$createdAt"), Query.limit(7)]
-      );
   
       return posts.documents;
     } catch (error) {

@@ -1,33 +1,33 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  Image,
-  FlatList,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  ActivityIndicator
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import useAppwrite from '../../lib/useAppwrite';
 import { getAllArticles } from '../../lib/appwrite';
-
-// Obtém a largura da tela para cálculos responsivos
-const { width } = Dimensions.get('window');
+import ArticleDetailModal from '../../components/ArticleDetail';
 
 const ArticleList = () => {
-  const {data: articles} = useAppwrite(getAllArticles);
+  const [selectedArticle, setSelectedArticle] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const {data: articles, refetch} = useAppwrite(getAllArticles);
 
-  // Função para renderizar cada item da lista
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }
+
+  const handleArticlePress = (article) => {
+    setSelectedArticle(article);
+    setModalVisible(true);
+  };
+
   const renderArticle = ({ item }) => {
     return (
       <TouchableOpacity
         style={styles.articleContainer}
-        onPress={() => {
-          // Adicione aqui a navegação para a tela de detalhes do artigo
-          console.log('Artigo selecionado:', item.title);
-        }}
+        onPress={() => handleArticlePress(item)}
       >
         {/* Container principal do artigo */}
         <View style={styles.articleContent}>
@@ -36,12 +36,12 @@ const ArticleList = () => {
             <Text style={styles.title} numberOfLines={2}>
               {item.title}
             </Text>
-            
+
             <View style={styles.metaContainer}>
               <View style={styles.metaItem}>
                 <Feather name="calendar" size={14} color="#666" />
                 <Text style={styles.metaText}>
-                  {new Date(item.date).toLocaleDateString()}
+                  {new Date(item.datetime).toLocaleDateString()}
                 </Text>
               </View>
               
@@ -52,19 +52,18 @@ const ArticleList = () => {
             </View>
           </View>
 
-          {/* Conteúdo do artigo */}
-          <Text style={styles.content} numberOfLines={3}>
-            {item.content}
+          {/* Preview do conteúdo do artigo */}
+          <Text style={styles.content} numberOfLines={5}>
+            {item.introduction}
           </Text>
 
           {/* Imagem do artigo (se existir) */}
-          {item.image && (
+          {item.thumbnail && (
             <View style={styles.imageContainer}>
               <Image
-                source={{ uri: item.image }}
+                source={{ uri: item.thumbnail}}
                 style={styles.image}
                 resizeMode="cover"
-                // Tratamento de loading e erro
                 loadingIndicatorSource={<ActivityIndicator />}
                 onError={(error) => console.log('Erro ao carregar imagem:', error)}
               />
@@ -75,46 +74,49 @@ const ArticleList = () => {
         {/* Botão "Ler mais" */}
         <View style={styles.readMoreContainer}>
           <Text style={styles.readMoreText}>Ler mais</Text>
-          <Feather name="chevron-right" size={16} color="#0066CC" />
+          <Feather name="chevron-right" size={16} color="#ea88e6" />
         </View>
       </TouchableOpacity>
     );
   };
 
   return (
-    <FlatList
-      data={articles}
-      renderItem={renderArticle}
-      keyExtractor={(item) => item.id}
-      contentContainerStyle={styles.listContainer}
-      ItemSeparatorComponent={() => <View style={styles.separator} />}
-      // Pull to refresh
-      onRefresh={() => {
-        // Implemente a lógica de refresh
-        console.log('Atualizando lista...');
-      }}
-      refreshing={false}
-      // Loading inicial
-      ListEmptyComponent={() => (
-        <View style={styles.emptyContainer}>
-          <Feather name="inbox" size={48} color="#666" />
-          <Text style={styles.emptyText}>Nenhum artigo encontrado</Text>
-        </View>
-      )}
-    />
+    <>
+      <FlatList
+        data={articles}
+        renderItem={renderArticle}
+        keyExtractor={(item) => item.$id}
+        contentContainerStyle={styles.listContainer}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        onRefresh={onRefresh}
+        refreshing={refreshing}
+        ListEmptyComponent={() => (
+          <View style={styles.emptyContainer}>
+            <Feather name="inbox" size={48} color="#666" />
+            <Text style={styles.emptyText}>Nenhum artigo encontrado</Text>
+          </View>
+        )}
+      />
+
+      <ArticleDetailModal
+        article={selectedArticle}
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   listContainer: {
     padding: 16,
-    paddingBottom: 80, // Espaço para o tab navigator
+    paddingBottom: 80,
   },
   articleContainer: {
     backgroundColor: '#fff',
-    borderRadius: 12,
+    borderRadius: 3,
     padding: 16,
-    elevation: 2,
+    elevation: 1,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -138,6 +140,8 @@ const styles = StyleSheet.create({
   metaContainer: {
     flexDirection: 'row',
     gap: 16,
+    marginTop: 10
+    ,
   },
   metaItem: {
     flexDirection: 'row',
@@ -173,7 +177,7 @@ const styles = StyleSheet.create({
   },
   readMoreText: {
     fontSize: 14,
-    color: '#0066CC',
+    color: '#ea88e6',
     fontWeight: '500',
   },
   separator: {
