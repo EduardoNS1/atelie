@@ -4,6 +4,7 @@ import { Feather } from '@expo/vector-icons';
 import useAppwrite from '../../lib/useAppwrite';
 import { getAllArticles } from '../../lib/appwrite';
 import ArticleDetailModal from '../../components/ArticleDetail';
+import moment from 'moment-timezone';
 
 const ArticleList = () => {
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -41,7 +42,7 @@ const ArticleList = () => {
               <View style={styles.metaItem}>
                 <Feather name="calendar" size={14} color="#666" />
                 <Text style={styles.metaText}>
-                  {new Date(item.datetime).toLocaleDateString()}
+                  {moment.tz(item.$createdAt, 'America/Sao_Paulo').format('DD/MM/YYYY HH:mm')}
                 </Text>
               </View>
               

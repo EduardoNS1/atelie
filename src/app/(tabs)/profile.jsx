@@ -6,7 +6,7 @@ import useAppwrite from "../../lib/useAppwrite";
 import { getUserPosts, signOut } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import InfoBox from "../../components/InfoBox";
-import VideoCard from "../../components/VideoCard";
+import PostCard from "../../components/PostCard";
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
@@ -26,8 +26,9 @@ const Profile = () => {
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <VideoCard
+          <PostCard
             title={item.title}
+            description={item.description}
             thumbnail={item.thumbnail}
             creator={item.creator.username}
             avatar={item.creator.avatar}
@@ -80,7 +81,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#FFF', // substitua pelo valor real
+    backgroundColor: '#f5f5f5',
   },
   headerContainer: {
     width: '100%',
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
   avatarContainer: {
     width: 64,
     height: 64,
-    borderColor: '#yourSecondaryColor', // substitua pelo valor real
+    borderColor: '#yourSecondaryColor',
     borderWidth: 1,
     borderRadius: 12,
     justifyContent: 'center',

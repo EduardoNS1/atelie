@@ -18,10 +18,30 @@ const SignIn = () => {
     password: "",
   })
 
+  const handleAuthError = (error) => {
+    switch (error.code) {
+      case 400: 
+        return "Passwords do not match. Please check the password and confirm password.";
+      case 401:
+        return "Unauthorized: Invalid credentials.";
+      case 403:
+        return "Forbidden: Access denied.";
+      case 404:
+        return "Not found: User does not exist.";
+      case 500:
+        return "Server error: Please try again later.";
+      default:
+        return "An unexpected error occurred.";
+    }
+  };
+
   const submit = async () => {
     if(form.email === "" || form.password === ""){
-      Alert.alert("Error", "Please fill in all fields")
-    }
+      Alert.alert("Erro",
+      "Por favor, preencha todos os campos obrigatórios"
+      [{ text: "OK" }]
+    )
+  }
 
     setSubmitting(true)
 
@@ -34,7 +54,9 @@ const SignIn = () => {
       Alert.alert("Sucess", "User signed in succcesfully")
       router.replace("/home")
     }catch(error){
-      Alert.alert("Error", error.message)
+      const errorMessage = handleAuthError(error);
+    // Display the error message to the user
+    alert(errorMessage);
     }finally{
       setSubmitting(false)
     }

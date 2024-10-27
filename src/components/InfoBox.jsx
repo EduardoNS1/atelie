@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text } from 'react-native'
 
-const InfoBox = ({ title, subtitle, containerStyles, titleStyels }) => {
+const InfoBox = ({ title, subtitle }) => {
     return(
         <View>
             <Text style={styles.textTitle}>{title}</Text>

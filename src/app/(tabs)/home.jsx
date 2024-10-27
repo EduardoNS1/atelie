@@ -6,7 +6,7 @@ import SearchInput from '../../components/SearchInput'
 import useAppwrite from '../../lib/useAppwrite'
 import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
-import VideoCard from '../../components/VideoCard'
+import PostCard from '../../components/PostCard'
 
 const Home = () => {
   const { user } = useGlobalContext()
@@ -25,12 +25,14 @@ const Home = () => {
         data={posts}
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <VideoCard
+          <PostCard
             title={item.title}
             description={item.description}
             thumbnail={item.thumbnail}
             creator={item.creator.username}
             avatar={item.creator.avatar}
+            postid={item.$id}
+            createdAt={item.$createdAt}
           />
         )}
         ListHeaderComponent={() => (
@@ -80,10 +82,10 @@ const Home = () => {
 const styles = StyleSheet.create({
   safeAreaView: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#f5f5f5',
   },
   contentContainer: {
-    paddingBottom: 20,
+    paddingBottom: 60,
   },
   headerContainer: {
     paddingHorizontal: 16,

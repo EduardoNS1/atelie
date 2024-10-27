@@ -1,54 +1,74 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import { Link, router } from 'expo-router'
-import * as DocumentPicker from "expo-document-picker";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, View, Text, Alert, Image, TouchableOpacity, ScrollView, Platform } from "react-native"
+import * as DocumentPicker from "expo-document-picker"
+import { SafeAreaView } from "react-native-safe-area-context"
+import { 
+  StyleSheet, 
+  View, 
+  Text, 
+  Alert, 
+  Image, 
+  TouchableOpacity, 
+  ScrollView, 
+  Platform,
+  ActivityIndicator
+} from "react-native"
 
-import { icons } from "../../constants";
-import { createPost } from "../../lib/appwrite";
-import DescriptionFormField from "../../components/DescriptionFormField";
-import CustomButton from "../../components/CustomButton";
-import { useGlobalContext } from "../../context/GlobalProvider";
-import TestFormField from "../../components/TestFormField";
+import { icons } from "../../constants"
+import { createPost } from "../../lib/appwrite"
+import { useGlobalContext } from "../../context/GlobalProvider"
+import ModernFormField from "../../components/ModernFormField"
+import LongTextFormField from "../../components/LongTextFormField"
 
 const Create = () => {
   const { user } = useGlobalContext()
   const [uploading, setUploading] = useState(false)
+  const [errors, setErrors] = useState({})
   const [form, setForm] = useState({
     title: "",
     thumbnail: null,
     description: "",
   })
 
-  const openPicker = async (selectType) => {
+  const openPicker = async () => {
     const result = await DocumentPicker.getDocumentAsync({
-      type:
-        selectType === "image"
-          ? ["image/png", "image/jpg"]
-          : ["video/mp4", "video.gif"],
+      type: ["image/png", "image/jpg", "image/jpeg"],
     })
 
     if (!result.canceled) {
-      if (selectType == "image") {
-        setForm({
-          ...form,
-          thumbnail: result.assets[0],
-        })
-      }
-    } else {
-      setTimeout(() => {
-        Alert.alert("Lembre-se: você precisa selecionar uma foto para avançar")
-      }, 100)
+      setForm({
+        ...form,
+        thumbnail: result.assets[0],
+      })
+      setErrors({ ...errors, thumbnail: null })
     }
   }
 
+  const validateForm = () => {
+    const newErrors = {}
+
+    if (!form.title.trim()) {
+      newErrors.title = "O título é obrigatório"
+    }
+    if (!form.description.trim()) {
+      newErrors.description = "A descrição é obrigatória"
+    }
+    if (!form.thumbnail) {
+      newErrors.thumbnail = "Uma imagem é obrigatória"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
   const submit = async () => {
-    if (
-      (form.description === "") |
-      (form.title === "") |
-      !form.thumbnail
-    ) {
-      return Alert.alert("Quase lá! Apenas preencha todos os campos para continuar.")
+    if (!validateForm()) {
+      Alert.alert(
+        "Campos Incompletos",
+        "Por favor, preencha todos os campos obrigatórios",
+        [{ text: "OK" }]
+      )
+      return
     }
 
     setUploading(true)
@@ -58,177 +78,254 @@ const Create = () => {
         userId: user.$id,
       })
 
-      Alert.alert("Sucess", "Post uploaded succesfully")
-      router.push("/home")
+      Alert.alert(
+        "Sucesso!", 
+        "Sua publicação foi criada com sucesso!", 
+        [{ text: "OK", onPress: () => { router.push("/home") }}]
+      )
     } catch (error) {
-      Alert.alert("Error", error.message)
+      Alert.alert(
+        "Erro", 
+        "Não foi possível criar sua publicação. Tente novamente.",
+        [{ text: "OK" }]
+      )
     } finally {
-      setForm({
-        title: "",
-        thumbnail: null,
-        description: "",
-      })
-
       setUploading(false)
     }
   }
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
-        <ScrollView>
-          <View style={styles.mainView}>
-
-            <View style={styles.returnButtonView}>
-                <Link style={{ height: 30 }} href="/home">
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView 
+        style={styles.container}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+      >
+        <View style={styles.imageSection}>
+          <TouchableOpacity 
+            onPress={openPicker}
+            style={[
+              styles.uploadContainer,
+              errors.thumbnail && styles.uploadContainerError
+            ]}
+            activeOpacity={0.7}
+          >
+            {form.thumbnail ? (
+              <>
+                <Image
+                  source={{ uri: form.thumbnail.uri }}
+                  style={styles.previewImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.changeOverlay}>
                   <Image
-                    source={icons.arrowback}
+                    source={icons.cameraicon}
+                    style={styles.overlayIcon}
                     resizeMode="contain"
-                    style={styles.uploadReturnIcon}
                   />
-                </Link>
-            </View>
+                  <Text style={styles.overlayText}>Trocar Imagem</Text>
+                </View>
+              </>
+            ) : (
+              <View style={styles.uploadPlaceholder}>
+                <Image
+                  source={icons.cameraicon}
+                  style={styles.uploadIcon}
+                  resizeMode="contain"
+                />
+                <Text style={styles.uploadText}>
+                  Toque para adicionar uma imagem
+                </Text>
+                <Text style={styles.uploadSubtext}>
+                  PNG, JPG ou JPEG
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+          {errors.thumbnail && (
+            <Text style={styles.errorText}>{errors.thumbnail}</Text>
+          )}
+        </View>
 
-            <View style={styles.uploadContainer}>
-              <TouchableOpacity onPress={() => openPicker("image")}>
-                {form.thumbnail ? (
-                  <Image
-                    source={{ uri: form.thumbnail.uri }}
-                    resizeMode="cover"
-                    style={styles.thumbnailPreview}
-                  />
-                ) : (
-                  <View style={styles.thumbnailPlaceholder}>
-                    <Image
-                      source={icons.cameraicon}
-                      resizeMode="contain"
-                      style={styles.uploadIconSmall}
-                    />
-                  </View>
-                )}
-              </TouchableOpacity>
-            </View>
-            
-            <TestFormField
-              value={form.title}
-              placeholder="Dê um nome para sua criação..."
-              handleChangeText={(e) => setForm({ ...form, title: e })}
-              otherStyles={styles.formField}
-            />
+        <View style={styles.formSection}>
+          <ModernFormField
+            title="Título"
+            value={form.title}
+            handleChangeText={(text) => {
+              setForm({ ...form, title: text })
+              setErrors({ ...errors, title: null })
+            }}
+            error={errors.title}
+            required
+            maxLength={100}
+          />
 
-            <DescriptionFormField
-              value={form.description}
-              placeholder="Este é seu momento de brilhar! Conte-nos tudo sobre essa produção..."
-              handleChangeText={(e) => setForm({ ...form, description: e })}
-              otherStyles={styles.formField}
-            />
+          <LongTextFormField
+            title="Descrição"
+            value={form.description}
+            handleChangeText={(text) => {
+              setForm({ ...form, description: text })
+              setErrors({ ...errors, description: null })
+            }}
+            error={errors.description}
+            required
+            maxLength={1000}
+            minLines={4}
+          />
+        </View>
 
-            <CustomButton
-              title="Enviar & Publicar"
-              handlePress={submit}
-              containerStyles={styles.submitButton}
-              isLoading={uploading}
-            />
-          </View>
-        </ScrollView>
+        <View style={styles.buttonSection}>
+          <TouchableOpacity
+            style={[styles.submitButton, uploading && styles.submitButtonDisabled]}
+            onPress={submit}
+            disabled={uploading}
+            activeOpacity={0.7}
+          >
+            {uploading ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Text style={styles.submitButtonText}>Publicar</Text>
+            )}
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  safeAreaView: {
+  safeArea: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: '#FFFFFF',
   },
-  mainView: {
-    flex: 1,
-    justifyContent: 'center',
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
   },
-  returnButtonView: {
-    justifyContent: 'center',
-    alignItems: 'center'
+  backButton: {
+    padding: 8,
   },
-  title: {
-    fontSize: 28,
-    color: '#000',
+  backIcon: {
+    width: 24,
+    height: 24,
+  },
+  headerTitle: {
+    marginLeft: 12,
+    fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
-    marginBottom: 10,
+    color: '#000000',
   },
-  formField: {
-    marginTop: 10,
+  container: {
+    flex: 1,
+  },
+  content: {
+    padding: 16,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium',
+    color: '#000000',
+    marginBottom: 8,
+  },
+  imageSection: {
+    marginBottom: 24,
   },
   uploadContainer: {
-    marginTop: 7,
-    spaceY: 2,
-  },
-  label: {
-    fontSize: 6,
-    color: '#000',
-    fontFamily: 'Poppins-Medium',
-  },
-  videoPreview: {
     width: '100%',
-    height: 256,
-    borderRadius: 16,
+    height: 500,
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+    borderStyle: 'solid',
   },
-  uploadPlaceholder: {
+  uploadContainerError: {
+    borderColor: '#FF4646',
+  },
+  previewImage: {
     width: '100%',
-    height: 160,
-    backgroundColor: '#1c1c1e',
-    borderRadius: 16,
-    borderColor: '#ccc',
-    borderWidth: 1,
+    height: '100%',
+  },
+  changeOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  uploadIconContainer: {
-    width: 56,
-    height: 56,
-    borderColor: '#F65AEF',
-    borderWidth: 2,
-    borderStyle: 'dashed',
-    borderRadius: 28,
+  overlayIcon: {
+    width: 32,
+    height: 32,
+    tintColor: '#FFFFFF',
+    marginBottom: 8,
+  },
+  overlayText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontFamily: 'Poppins-Medium',
+  },
+  uploadPlaceholder: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   uploadIcon: {
-    width: '50%',
-    height: '50%',
+    width: 48,
+    height: 48,
+    tintColor: '#666666',
+    marginBottom: 12,
   },
-  thumbnailPreview: {
-    width: '100%',
-    height: 340,
-  },
-  thumbnailPlaceholder: {
-    marginTop: 10,
-    width: '100%',
-    height: 340,
-    backgroundColor: '#F0F0F0',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  uploadIconSmall: {
-    width: 80,
-    height: 80,
-  },
-  uploadReturnIcon: {
-    width: 25,
-    height: 25,
-  },
-  chooseFileText: {
-    fontSize: 27,
-    color: '#000',
+  uploadText: {
+    fontSize: 16,
+    color: '#666666',
     fontFamily: 'Poppins-Medium',
+    marginBottom: 4,
+  },
+  uploadSubtext: {
+    fontSize: 14,
+    color: '#8B8B8B',
+    fontFamily: 'Poppins-Regular',
+  },
+  formSection: {
+    marginBottom: 24,
+  },
+  errorText: {
+    marginTop: 4,
+    marginLeft: 16,
+    fontSize: 12,
+    fontFamily: 'Poppins-Medium',
+    color: '#FF4646',
   },
   submitButton: {
-    marginTop: 20,
+    backgroundColor: '#F65AEF',
+    borderRadius: 12,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#F65AEF',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
-  viewTextInput: {
-    height: 200,
-    color: '#000'
-  }
+  submitButtonDisabled: {
+    opacity: 0.7,
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontFamily: 'Poppins-SemiBold',
+  },
 })
 
 export default Create

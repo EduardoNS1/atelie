@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator } from "react-native";
-import { Feather } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator, Alert } from "react-native";
 
-
-const VideoCard = ({ title, creator, avatar, thumbnail, description, datetime }) => {
+const PostCard = ({ title, creator, avatar, thumbnail, description, datetime }) => {
   const [expanded, setExpanded] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageRatio, setImageRatio] = useState(1); // 1:1 por padrão
@@ -48,10 +46,6 @@ const VideoCard = ({ title, creator, avatar, thumbnail, description, datetime })
             <Text style={styles.timeText}>{new Date(datetime).toLocaleDateString()}</Text>
           </View>
         </View>
-
-        <TouchableOpacity style={styles.menuButton}>
-          <Feather name="more-horizontal" size={24} color="#666" />
-        </TouchableOpacity>
       </View>
 
       {/* Thumbnail com proporção ajustável */}
@@ -106,8 +100,8 @@ const VideoCard = ({ title, creator, avatar, thumbnail, description, datetime })
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFF',
-    marginBottom: 16,
-    borderRadius: 16,
+    marginBottom: 20,
+    borderRadius: 4,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: {
@@ -168,8 +162,9 @@ const styles = StyleSheet.create({
   },
   thumbnailContainer: {
     width: '100%',
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#FFFF',
     position: 'relative',
+    padding: 10,
   },
   thumbnail: {
     width: '100%',
@@ -203,6 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   prompt: {
+    paddingBottom: 15,
     fontSize: 14,
     color: '#4A4A4A',
     lineHeight: 20,
@@ -218,4 +214,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VideoCard;
+export default PostCard;

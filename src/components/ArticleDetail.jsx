@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, SafeAreaView, StatusBar } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import moment from 'moment-timezone';
 
 const ArticleDetailModal = ({ article, visible, onClose }) => {
   if (!article) return null;
@@ -46,7 +47,7 @@ const ArticleDetailModal = ({ article, visible, onClose }) => {
               <View style={styles.metaItem}>
                 <Feather name="calendar" size={14} color="#666" />
                 <Text style={styles.metaText}>
-                  {new Date(article.datetime).toLocaleDateString()}
+                  {moment.tz(article.$createdAt, 'America/Sao_Paulo').format('DD/MM/YYYY HH:mm')}
                 </Text>
               </View>
               <View style={styles.metaItem}>

@@ -21,12 +21,12 @@ const CustomButton = ({
                 <Text style={styles.title}>{title}</Text>
 
                 {isLoading && (
-                <ActivityIndicator
-                    style={{ marginLeft: 100 }}
-                    animating={isLoading}
-                    color="#000"
-                    size="large"
-                />
+                    <ActivityIndicator
+                        style={{ marginLeft: 100 }}
+                        animating={isLoading}
+                        color="#000"
+                        size="large"
+                    />
                 )}
             </TouchableOpacity>
         </LinearGradient>

@@ -22,24 +22,28 @@ const TAB_CONFIG = [
     title: "Home",         // Título que aparece abaixo do ícone
     icon: "compass",         // Nome do ícone do Feather
     shown: false,
+    unmountOnBlur: false,
   },
   {
     name: "articles",
     title: "Artigos",
     icon: "file-text",
-    shwon: "true",
+    shown: true,
+    unmountOnBlur: false,
   },
   {
     name: "create",
-    title: "Criar",
+    title: "Nova Publicação",
     icon: "plus-circle",
     shown: false,
+    unmountOnBlur: true,
   },
   {
     name: "profile",
     title: "Perfil",
     icon: "user",
     shown: false,
+    unmountOnBlur: false,
   },
 ];
 
@@ -83,7 +87,7 @@ const TabLayout = () => {
             options={{
               title: tab.title,
               headerShown: tab.shown,
-              headerTitleAlign: "center",
+              unmountOnBlur: tab.unmountOnBlur,
               headerStyle: {
                 backgroundColor: THEME.colors.background,
               },

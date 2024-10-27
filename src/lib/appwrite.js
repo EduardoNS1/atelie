@@ -32,7 +32,7 @@ import {
   const databases = new Databases(client);
   
   // Register user
-  export async function createUser(email, password, username) {
+  export async function createUser(email, password, username ) {
     try {
       const newAccount = await account.create(
         ID.unique(),
@@ -171,7 +171,7 @@ import {
   // Create Video Post
   export async function createPost(form) {
     try {
-      const [thumbnailUrl, videoUrl] = await Promise.all([
+      const [thumbnailUrl] = await Promise.all([
         uploadFile(form.thumbnail, "image"),
         uploadFile(form.video, "video"),
       ]);
@@ -193,13 +193,14 @@ import {
       throw new Error(error);
     }
   }
-  
+
   // Get all video Posts
   export async function getAllPosts() {
     try {
       const posts = await databases.listDocuments(
         appwriteConfig.databaseId,
-        appwriteConfig.postsCollectionId
+        appwriteConfig.postsCollectionId,
+        [Query.orderDesc("$createdAt")]
       );
   
       return posts.documents;
@@ -228,6 +229,7 @@ import {
       const articles = await databases.listDocuments(
         appwriteConfig.databaseId,
         appwriteConfig.articlesCollectionId,
+        [Query.orderDesc("$createdAt")]
       );
 
       return articles.documents;
@@ -253,3 +255,21 @@ import {
     }
   }
   
+  export async function deletePost(postId) {
+    try {
+      const post = await databases.getDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.postsCollectionId,
+        postId
+      );
+
+      await databases.deleteDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.postsCollectionId,
+        postId
+      );
+      
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
