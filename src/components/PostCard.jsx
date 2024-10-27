@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator, Animated } from "react-native";
+import { View, Text, TouchableOpacity, Image, StyleSheet, ActivityIndicator } from "react-native";
+
 import { LinearGradient } from 'expo-linear-gradient';
 import moment from 'moment-timezone';
 
@@ -95,11 +96,12 @@ const PostCard = ({ title, creator, avatar, thumbnail, description, createdAt })
           )}
         </View>
 
+        {/* Interaction Section*/}
         <View style={styles.interactionBar}>
           <View style={styles.stats}>
-            <Text style={styles.statsText}>2.5k visualizações</Text>
-            <Text style={styles.statsText}>•</Text>
-            <Text style={styles.statsText}>142 comentários</Text>
+            <Text style={styles.statsText}></Text>
+            <Text style={styles.statsText}></Text>
+            <Text style={styles.statsText}></Text>
           </View>
         </View>
       </View>
@@ -233,7 +235,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   expandButtonText: {
-    color: '#FF6B6B',
+    color: '#ea88e6',
     fontSize: 14,
     fontWeight: '600',
   },

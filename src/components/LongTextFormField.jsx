@@ -1,10 +1,10 @@
-import { StyleSheet, View, Text, TextInput, Animated, Platform } from 'react-native'
-import { useState, useRef, useEffect } from 'react'
+import { StyleSheet, View, Text, TextInput, Animated, Platform } from "react-native";
+import { useState, useRef, useEffect } from "react";
 
 const LongTextFormField = ({ title, value, placeholder, handleChangeText, maxLength = 1000, minLines = 4, error, helperText, required, ...props }) => {
-  const [isFocused, setIsFocused] = useState(false)
-  const [contentHeight, setContentHeight] = useState(0)
-  const animatedValue = useRef(new Animated.Value(0)).current
+  const [isFocused, setIsFocused] = useState(false);
+  const [contentHeight, setContentHeight] = useState(0);
+  const animatedValue = useRef(new Animated.Value(0)).current;
   
   useEffect(() => {
     Animated.timing(animatedValue, {
@@ -90,8 +90,8 @@ const LongTextFormField = ({ title, value, placeholder, handleChangeText, maxLen
         </Text>
       )}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   required: {
-    color: '#FF4646',
+    color: '#ea88e6',
   },
   input: {
     flex: 1,
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingTop: 16,
     lineHeight: 24,
-    minHeight: 120, // Altura mínima para 4 linhas aproximadamente
+    minHeight: 90, // Altura mínima para 3 linhas aproximadamente
     textAlignVertical: 'top',
   },
   statsContainer: {
@@ -179,6 +179,6 @@ const styles = StyleSheet.create({
     color: '#FF4646',
     fontFamily: 'Poppins-Medium',
   },
-})
+});
 
-export default LongTextFormField
+export default LongTextFormField;

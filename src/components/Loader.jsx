@@ -7,11 +7,7 @@ const Loader = ({ isLoading }) => {
   if (!isLoading) return null;
 
   return (
-    <View
-      style={{
-        height: screenHeight,
-      }}
-    >
+    <View style={{ height: screenHeight }}>
       <ActivityIndicator
         animating={isLoading}
         color="#fff"

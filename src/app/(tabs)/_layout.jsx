@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { Redirect, Tabs } from "expo-router";
 import { View, StyleSheet } from "react-native";
+
 import { Feather } from '@expo/vector-icons';
 import Loader from "../../components/Loader";
 import { useGlobalContext } from "../../context/GlobalProvider";

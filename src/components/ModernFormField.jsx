@@ -1,28 +1,20 @@
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, Animated, Platform } from 'react-native'
-import { useState, useRef, useEffect } from 'react'
-import React, { icons } from '../constants'
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, Animated, Platform } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
 
-const ModernFormField = ({ 
-  title, 
-  value, 
-  placeholder, 
-  handleChangeText, 
-  error,
-  helperText,
-  required,
-  ...props 
-}) => {
-  const [showPassword, setShowPassword] = useState(false)
-  const [isFocused, setIsFocused] = useState(false)
-  const animatedValue = useRef(new Animated.Value(0)).current
+import { icons } from "../constants";
+
+const ModernFormField = ({ title, value, placeholder, handleChangeText, error, helperText, required, ...props }) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const animatedValue = useRef(new Animated.Value(0)).current;
   
   useEffect(() => {
     Animated.timing(animatedValue, {
       toValue: isFocused || value ? 1 : 0,
       duration: 150,
       useNativeDriver: false
-    }).start()
-  }, [isFocused, value])
+    }).start();
+  }, [isFocused, value]);
 
   const labelStyle = {
     transform: [
@@ -41,9 +33,9 @@ const ModernFormField = ({
       inputRange: [0, 1],
       outputRange: ['#8B8B8B', '#F65AEF']
     })
-  }
+  };
 
-  const borderColor = error ? '#FF4646' : isFocused ? '#F65AEF' : '#E0E0E0'
+  const borderColor = error ? '#FF4646' : isFocused ? '#F65AEF' : '#E0E0E0';
 
   return (
     <View style={styles.container}>
@@ -95,8 +87,8 @@ const ModernFormField = ({
         </Text>
       )}
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -147,7 +139,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   required: {
-    color: '#FF4646',
+    color: '#ea88e6',
   },
   input: {
     flex: 1,
@@ -183,6 +175,6 @@ const styles = StyleSheet.create({
     color: '#FF4646',
     fontFamily: 'Poppins-Medium',
   },
-})
+});
 
-export default ModernFormField
+export default ModernFormField;

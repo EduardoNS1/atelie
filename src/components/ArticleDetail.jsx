@@ -1,7 +1,8 @@
-import React from 'react';
-import { Modal, View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, SafeAreaView, StatusBar } from 'react-native';
+import React from "react";
+import { Modal, View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, SafeAreaView, StatusBar } from "react-native";
+
+import moment from "moment-timezone";
 import { Feather } from '@expo/vector-icons';
-import moment from 'moment-timezone';
 
 const ArticleDetailModal = ({ article, visible, onClose }) => {
   if (!article) return null;

@@ -1,12 +1,12 @@
-import { StyleSheet, View, TextInput, TouchableOpacity, Image } from 'react-native'
-import { useState } from 'react'
-import { router, usePathname } from 'expo-router'
+import { StyleSheet, View, TextInput, TouchableOpacity, Image } from "react-native";
+import { useState } from "react";
+import { router, usePathname } from "expo-router";
 
-import React, { icons } from '../constants'
+import React, { icons } from "../constants";
 
 const SearchInput = ({ initialQuery }) => {
-    const pathname = usePathname()
-    const [query, setQuery] = useState(initialQuery || "")
+    const pathname = usePathname();
+    const [query, setQuery] = useState(initialQuery || "");
 
     return (
             <View style={styles.viewTextInput}>
@@ -35,8 +35,8 @@ const SearchInput = ({ initialQuery }) => {
                     />
                 </TouchableOpacity>
             </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     spaceBetween: {
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         color: 'black',
         fontFamily: 'Poppins-Medium',
         fontSize: 15,
-    }
-})
+    },
+});
 
-export default SearchInput
+export default SearchInput;

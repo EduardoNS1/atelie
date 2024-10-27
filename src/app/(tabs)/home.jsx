@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { StyleSheet, Image, RefreshControl, Text, View, FlatList, TouchableOpacity } from 'react-native'
+import { StyleSheet, RefreshControl, Text, View, FlatList } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+
 import { Feather } from '@expo/vector-icons'
 import SearchInput from '../../components/SearchInput'
 import useAppwrite from '../../lib/useAppwrite'
-import { getAllPosts, getLatestPosts } from '../../lib/appwrite'
+import { getAllPosts } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
 import PostCard from '../../components/PostCard'
 
@@ -58,8 +59,7 @@ const Home = () => {
 
             {/* Separador para Feed Principal */}
             <View style={styles.feedHeader}>
-              <Text style={styles.feedTitle}>Feed</Text>
-              <View style={styles.feedDivider} />
+              <Text style={styles.feedTitle}>Explorar</Text>
             </View>
           </View>
         )}
@@ -76,8 +76,8 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   safeAreaView: {
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     paddingHorizontal: 16,
     paddingTop: 8,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: '#f5f5f5',
   },
   headerContent: {
     flexDirection: 'row',
@@ -175,12 +175,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     color: '#666',
   },
-  feedHeader: {
-    marginTop: 8,
-    marginBottom: 16,
-  },
   feedTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontFamily: 'Poppins-SemiBold',
     color: '#1A1A1A',
     marginBottom: 8,

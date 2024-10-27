@@ -1,18 +1,8 @@
-import { useEffect, useState } from "react"
-import { Link, router } from 'expo-router'
+import { useState } from "react"
+import { router } from 'expo-router'
 import * as DocumentPicker from "expo-document-picker"
 import { SafeAreaView } from "react-native-safe-area-context"
-import { 
-  StyleSheet, 
-  View, 
-  Text, 
-  Alert, 
-  Image, 
-  TouchableOpacity, 
-  ScrollView, 
-  Platform,
-  ActivityIndicator
-} from "react-native"
+import { StyleSheet, View, Text, Alert, Image, TouchableOpacity, ScrollView, Platform, ActivityIndicator } from "react-native"
 
 import { icons } from "../../constants"
 import { createPost } from "../../lib/appwrite"
@@ -21,19 +11,15 @@ import ModernFormField from "../../components/ModernFormField"
 import LongTextFormField from "../../components/LongTextFormField"
 
 const Create = () => {
-  const { user } = useGlobalContext()
-  const [uploading, setUploading] = useState(false)
-  const [errors, setErrors] = useState({})
-  const [form, setForm] = useState({
-    title: "",
-    thumbnail: null,
-    description: "",
-  })
+  const { user } = useGlobalContext();
+  const [uploading, setUploading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [form, setForm] = useState({ title: "", thumbnail: null, description: "" });
 
   const openPicker = async () => {
     const result = await DocumentPicker.getDocumentAsync({
       type: ["image/png", "image/jpg", "image/jpeg"],
-    })
+    });
 
     if (!result.canceled) {
       setForm({
@@ -190,8 +176,8 @@ const Create = () => {
         </View>
       </ScrollView>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -232,6 +218,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   imageSection: {
+    marginTop: 20,
     marginBottom: 24,
   },
   uploadContainer: {
@@ -300,6 +287,9 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     color: '#FF4646',
   },
+  buttonSection: {
+    marginBottom: 60,
+  },  
   submitButton: {
     backgroundColor: '#F65AEF',
     borderRadius: 12,
@@ -326,6 +316,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Poppins-SemiBold',
   },
-})
+});
 
-export default Create
+export default Create;

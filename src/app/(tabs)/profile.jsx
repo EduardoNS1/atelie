@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+
 import { Feather } from '@expo/vector-icons';
 import useAppwrite from "../../lib/useAppwrite";
 import { getUserPosts, signOut } from "../../lib/appwrite";
@@ -72,7 +73,11 @@ const Profile = () => {
               />
             </View>
           </View>
+
+
         )}
+
+        contentContainerStyle={styles.contentContainer}
       />
     </SafeAreaView>
   );
@@ -83,6 +88,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+  contentContainer: {
+    paddingBottom: 60,
+  },  
   headerContainer: {
     width: '100%',
     justifyContent: 'center',
@@ -94,6 +102,7 @@ const styles = StyleSheet.create({
   logoutButton: {
     width: '100%',
     alignItems: 'flex-end',
+    marginTop: 10,
     marginBottom: 10,
   },
   avatarContainer: {

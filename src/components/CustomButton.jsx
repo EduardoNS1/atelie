@@ -1,11 +1,7 @@
 import { StyleSheet, ActivityIndicator, Text, TouchableOpacity } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 
-const CustomButton = ({
-    title,
-    handlePress,
-    isLoading,
-}) => {
+const CustomButton = ({ title, handlePress, isLoading }) => {
     return (
         <LinearGradient style={{ marginTop: 28, minHeight: 64, borderRadius: 12, justifyContent: 'center', alignContent: 'center' }}
             start={{x: 1, y: 0}}
@@ -30,7 +26,7 @@ const CustomButton = ({
                 )}
             </TouchableOpacity>
         </LinearGradient>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -41,7 +37,7 @@ const styles = StyleSheet.create({
         minHeight: 64,
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     touchableOpacity1: {
         marginTop: 0,
@@ -49,12 +45,12 @@ const styles = StyleSheet.create({
         minHeight: 64,
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     title: {
         fontFamily: 'Poppins-Bold',
-        fontSize: 18
-    }
-})
+        fontSize: 18,
+    },
+});
 
 export default CustomButton;

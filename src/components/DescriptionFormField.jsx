@@ -1,10 +1,10 @@
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image } from 'react-native'
-import { useState } from 'react'
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
 
-import React, { icons } from '../constants'
+import { icons } from "../constants";
 
 const FormField = ({ title, value, placeholder, handleChangeText, ...props }) => {
-    const [showPassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <View style={styles.spaceBetween}>
@@ -30,18 +30,18 @@ const FormField = ({ title, value, placeholder, handleChangeText, ...props }) =>
                 )}
             </View>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     spaceBetween: {
-        marginTop: 8
+        marginTop: 8,
     },
     title: {
         marginTop: 0,
         fontFamily: 'Poppins-Medium',
         fontSize: 15,
-        color: '#000000'
+        color: '#000000',
     },
     viewTextInput: {
         paddingLeft: 16,
@@ -50,14 +50,14 @@ const styles = StyleSheet.create({
         height: 150,
         backgroundColor: 'rgba(240, 240, 240, 1)',
         flexDirection: 'row',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
     },
     textInput: {
         flex: 1,
         color: 'black',
         fontFamily: 'Poppins-Medium',
         fontSize: 15,
-    }
-})
+    },
+});
 
-export default FormField
+export default FormField;
