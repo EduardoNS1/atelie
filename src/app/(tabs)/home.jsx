@@ -3,11 +3,10 @@ import { StyleSheet, RefreshControl, Text, View, FlatList } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Feather } from '@expo/vector-icons'
-import SearchInput from '../../components/SearchInput'
 import useAppwrite from '../../lib/useAppwrite'
 import { getAllPosts } from '../../lib/appwrite'
 import { useGlobalContext } from '../../context/GlobalProvider'
-import PostCard from '../../components/PostCard'
+import { SearchInput, PostCard } from '../../components';
 
 const Home = () => {
   const { user } = useGlobalContext()
@@ -27,13 +26,12 @@ const Home = () => {
         keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
           <PostCard
+            avatar={item.creator.avatar}
+            creator={item.creator.username}
+            createdAt={item.$createdAt}
+            thumbnail={item.thumbnail}
             title={item.title}
             description={item.description}
-            thumbnail={item.thumbnail}
-            creator={item.creator.username}
-            avatar={item.creator.avatar}
-            postid={item.$id}
-            createdAt={item.$createdAt}
           />
         )}
         ListHeaderComponent={() => (

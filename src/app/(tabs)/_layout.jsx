@@ -3,7 +3,7 @@ import { Redirect, Tabs } from "expo-router";
 import { View, StyleSheet } from "react-native";
 
 import { Feather } from '@expo/vector-icons';
-import Loader from "../../components/Loader";
+import { Loader } from '../../components';
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const THEME = {
@@ -44,7 +44,7 @@ const TAB_CONFIG = [
     title: "Perfil",
     icon: "user",
     shown: false,
-    unmountOnBlur: false,
+    unmountOnBlur: true,
   },
 ];
 

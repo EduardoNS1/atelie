@@ -1,14 +1,13 @@
-import { useState } from "react"
-import { router } from 'expo-router'
-import * as DocumentPicker from "expo-document-picker"
-import { SafeAreaView } from "react-native-safe-area-context"
-import { StyleSheet, View, Text, Alert, Image, TouchableOpacity, ScrollView, Platform, ActivityIndicator } from "react-native"
+import { useState } from "react";
+import { router } from 'expo-router';
+import * as DocumentPicker from "expo-document-picker";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, View, Text, Alert, Image, TouchableOpacity, ScrollView, Platform, ActivityIndicator } from "react-native";
 
-import { icons } from "../../constants"
-import { createPost } from "../../lib/appwrite"
-import { useGlobalContext } from "../../context/GlobalProvider"
-import ModernFormField from "../../components/ModernFormField"
-import LongTextFormField from "../../components/LongTextFormField"
+import { icons } from "../../constants";
+import { createPost } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { ModernFormField, LongTextFormField } from "../../components"
 
 const Create = () => {
   const { user } = useGlobalContext();

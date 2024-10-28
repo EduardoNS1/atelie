@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons';
 import moment from 'moment-timezone';
 import useAppwrite from '../../lib/useAppwrite';
 import { getAllArticles } from '../../lib/appwrite';
-import ArticleDetailModal from '../../components/ArticleDetail';
+import { ArticleDetailModal } from '../../components';
 
 const ArticleList = () => {
   const [selectedArticle, setSelectedArticle] = useState(null);

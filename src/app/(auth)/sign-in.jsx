@@ -3,8 +3,7 @@ import { useState } from 'react';
 import { Link, router } from 'expo-router';
 
 import { images } from '../../constants';
-import FormField from '../../components/FormField';
-import CustomButton from '../../components/CustomButton';
+import { FormField, CustomButton } from '../../components';
 import { getCurrentUser, signIn } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { handleAppwriteInError } from '../../utils/handleErrors';

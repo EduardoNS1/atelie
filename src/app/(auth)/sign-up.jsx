@@ -2,8 +2,7 @@ import { StyleSheet, SafeAreaView, Text, View, ScrollView, Dimensions, Alert } f
 import { useState } from 'react';
 import { Link, router } from 'expo-router';
 
-import FormField from '../../components/FormField';
-import CustomButton from '../../components/CustomButton';
+import { FormField, CustomButton } from '../../components';
 import { createUser } from '../../lib/appwrite';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import { handleAppwriteUpError } from '../../utils/handleErrors';

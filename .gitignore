@@ -1,14 +1,28 @@
+# Node modules
 node_modules/
+
+# Expo
 .expo/
+
+# Build directories
 dist/
+web-build/
+
+# NPM debug logs
 npm-debug.*
+
+# Keystore files (Android)
 *.jks
 *.p8
 *.p12
 *.key
 *.mobileprovision
-*.orig.*
-web-build/
 
-# macOS
+# OS generated files
 .DS_Store
+
+# Environment variables
+.env
+
+# Temporary files
+*.orig.*
