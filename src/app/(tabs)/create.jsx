@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   uploadContainer: {
     width: '100%',
-    height: 500,
+    height: 400,
     borderRadius: 12,
     overflow: 'hidden',
     backgroundColor: '#FFFFFF',

@@ -47,7 +47,7 @@ const PostCard = ({ title, creator, avatar, thumbnail, description, createdAt })
               {creator}
             </Text>
             <Text style={styles.timeText}>
-              {moment.tz(createdAt, 'America/Sao_Paulo').format('DD/MM/YYYY HH:mm')}
+              {moment.tz(createdAt, 'America/Sao_Paulo').format('DD/MM/YYYY HH:hh')}
             </Text>
           </View>
         </View>

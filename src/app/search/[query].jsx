@@ -34,7 +34,7 @@ const Search = () => {
         ListHeaderComponent={() => (
           <>
             <View style={styles.headerContainer}>
-              <Text style={styles.resultsText}>Search Results</Text>
+              <Text style={styles.resultsText}>Resultados encontrados:</Text>
               <Text style={styles.queryText}>{query}</Text>
 
               <View style={styles.searchInputContainer}>
@@ -57,7 +57,7 @@ const Search = () => {
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#1A1A1A',
+    backgroundColor: '#f5f5f5',
     flex: 1,
   },
   headerContainer: {
@@ -67,13 +67,13 @@ const styles = StyleSheet.create({
   },
   resultsText: {
     fontFamily: 'Poppins-Medium',
-    color: '#D1D1D1',
+    color: '#1A1A1A',
     fontSize: 14,
   },
   queryText: {
     fontSize: 24,
     fontFamily: 'Poppins-SemiBold',
-    color: '#FFFFFF',
+    color: '#1A1A1A',
     marginTop: 8,
   },
   searchInputContainer: {

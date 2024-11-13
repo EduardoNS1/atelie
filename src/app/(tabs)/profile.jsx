@@ -48,11 +48,7 @@ const Profile = () => {
     );
   };
 
-  const renderPost = ({ item }) => {
-    // Console log para debug
-    console.log("Post Creator:", item.creator);
-    console.log("Current User:", user);
-    
+  const renderPost = ({ item }) => {    
     return (
       <View style={styles.postContainer}>
         <PostCard
@@ -74,61 +70,61 @@ const Profile = () => {
   };
 
   return (
-<SafeAreaView style={styles.safeAreaView}>
-      {loading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#E0E0E0" />
-        </View>
-      ) : (
-        <FlatList
-          data={posts}
-          keyExtractor={(item) => item.$id}
-          renderItem={renderPost}
-          ListEmptyComponent={() => (
-            <View style={styles.emptyContainer}>
-              <Feather name="inbox" size={48} color="#666" />
-              <Text style={styles.emptyText}>Nenhum post encontrado</Text>
+    <SafeAreaView style={styles.safeAreaView}>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color="#E0E0E0" />
             </View>
-          )}
-          ListHeaderComponent={() => (
-            <View style={styles.headerContainer}>
-            <TouchableOpacity
-              onPress={logout}
-              style={styles.logoutButton}
-            >
-              <Feather name="log-out" size={28} color="#666" />
-            </TouchableOpacity>
+          ) : (
+            <FlatList
+              data={posts}
+              keyExtractor={(item) => item.$id}
+              renderItem={renderPost}
+              ListEmptyComponent={() => (
+                <View style={styles.emptyContainer}>
+                  <Feather name="inbox" size={48} color="#666" />
+                  <Text style={styles.emptyText}>Nenhum post encontrado</Text>
+                </View>
+              )}
+              ListHeaderComponent={() => (
+                <View style={styles.headerContainer}>
+                <TouchableOpacity
+                  onPress={logout}
+                  style={styles.logoutButton}
+                >
+                  <Feather name="log-out" size={28} color="#666" />
+                </TouchableOpacity>
 
-            <View style={styles.avatarContainer}>
-              <Image
-                source={{ uri: user?.avatar }}
-                style={styles.avatar}
-                resizeMode="cover"
-              />
-            </View>
+                <View style={styles.avatarContainer}>
+                  <Image
+                    source={{ uri: user?.avatar }}
+                    style={styles.avatar}
+                    resizeMode="cover"
+                  />
+                </View>
 
-            <InfoBox
-              title={user?.username}
-              containerStyles={styles.infoBoxContainer}
-              titleStyles={styles.infoBoxTitle}
+                <InfoBox
+                  title={user?.username}
+                  containerStyles={styles.infoBoxContainer}
+                  titleStyles={styles.infoBoxTitle}
+                />
+
+                <View style={styles.statsContainer}>
+                  <InfoBox
+                    title={posts.length || 0}
+                    subtitle="Posts"
+                    titleStyles={styles.infoBoxTitle}
+                    containerStyles={styles.postsContainer}
+                  />
+                </View>
+              </View>
+              )}
+              contentContainerStyle={styles.contentContainer}
             />
-
-            <View style={styles.statsContainer}>
-              <InfoBox
-                title={posts.length || 0}
-                subtitle="Posts"
-                titleStyles={styles.infoBoxTitle}
-                containerStyles={styles.postsContainer}
-              />
-            </View>
-          </View>
           )}
-          contentContainerStyle={styles.contentContainer}
-        />
-      )}
-    </SafeAreaView>
-  );
-};
+        </SafeAreaView>
+      );
+    };
 
 const styles = StyleSheet.create({
  safeAreaView: {
@@ -155,7 +151,6 @@ const styles = StyleSheet.create({
  avatarContainer: {
    width: 64,
    height: 64,
-   borderColor: '#yourSecondaryColor',
    borderWidth: 1,
    borderRadius: 12,
    justifyContent: 'center',
@@ -213,22 +208,22 @@ const styles = StyleSheet.create({
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
-  backgroundColor: '#F5F5F5', // A beautiful blue background
+  backgroundColor: '#F5F5F5',
   padding: 20,
   borderRadius: 10,
-  shadowColor: '#000', // Add shadow for depth
+  shadowColor: '#000',
   shadowOffset: {
     width: 0,
     height: 2,
   },
   shadowOpacity: 0.25,
   shadowRadius: 3.5,
-  elevation: 5, // For Android shadow
+  elevation: 5,
 },
 loadingText: {
   marginTop: 15,
   fontSize: 18,
-  color: '#ffffff', // Change text color to white
+  color: '#ffffff',
   fontWeight: 'bold',
   textAlign: 'center',
 },

@@ -2,7 +2,7 @@ import { StyleSheet, View, TextInput, TouchableOpacity, Image, Alert } from "rea
 import React, { useState } from "react";
 import { router, usePathname } from "expo-router"; 
 
-import { icons } from "../constants";
+import { Feather } from '@expo/vector-icons';
 
 const SearchInput = ({ initialQuery }) => {
     const pathname = usePathname(); // Obtém o pathname atual da rota
@@ -13,7 +13,7 @@ const SearchInput = ({ initialQuery }) => {
             <TextInput
                 style={styles.textInput}
                 value={query}
-                placeholder="Search for a topic"
+                placeholder="Procurar por um post"
                 placeholderTextColor={"#8B8B8B"}
                 onChangeText={(e) => setQuery(e)} // Atualiza o estado quando o texto muda
             />
@@ -22,18 +22,15 @@ const SearchInput = ({ initialQuery }) => {
                 onPress={() => {
                     if (query === "") // Verifica se a query está vazia
                         return Alert.alert(
-                            "Missing Query",
-                            "Please input something to search results across database"
+                            "Nada encontrado",
+                            "Digite um termo para filtrar as postagens que você procura."
                         )
                     
                     // Redireciona para a página de busca com a query
                     if (pathname.startsWith("/search")) router.setParams({ query })
                     else router.push(`/search/${query}`)
                 }}>
-                <Image 
-                    source={icons.search}
-                    resizeMode='contain'
-                />
+                <Feather name="search" size={32} color="#383838" />
             </TouchableOpacity>
         </View>
     );
@@ -48,17 +45,14 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         fontFamily: 'Poppins-Medium',
         fontSize: 15,
-        color: '#000000',
+        color: '#1A1A1A',
     },
     viewTextInput: {
         paddingLeft: 16,
         paddingRight: 16,
         width: '100%',
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: 'rgba(147, 187, 255, 0.12)',
         height: 64,
-        backgroundColor: 'rgba(147, 187, 255, 0.12)',
+        backgroundColor: '#FFF',
         flexDirection: 'row',
         alignItems: 'center',
     },

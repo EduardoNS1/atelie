@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, RefreshControl, Text, View, FlatList } from 'react-native'
+import { StyleSheet, RefreshControl, Text, View, FlatList, Image } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 import { Feather } from '@expo/vector-icons'
@@ -42,22 +42,18 @@ const Home = () => {
                 <Text style={styles.welcomeText}>Bem-vindo de volta,</Text>
                 <Text style={styles.usernameText}>{user?.username}</Text>
               </View>
-
-              <View style={styles.logoContainer}>
-              </View>
+              {/* <View style={styles.logoContainer}>
+              </View> */}
             </View>
 
             {/* Barra de Pesquisa com Ícone */}
             <View style={styles.searchContainer}>
               <SearchInput />
-              <View style={styles.filterButton}>
-                <Feather name="sliders" size={20} color="#666" />
-              </View>
             </View>
 
             {/* Separador para Feed Principal */}
             <View style={styles.feedHeader}>
-              <Text style={styles.feedTitle}>Explorar</Text>
+              <Text style={styles.feedTitle}>Explorar publicações</Text>
             </View>
           </View>
         )}
@@ -107,7 +103,7 @@ const styles = StyleSheet.create({
   },
   usernameText: {
     fontSize: 24,
-    fontFamily: 'Poppins-Bold',
+    fontFamily: 'Poppins-SemiBold',
     color: '#1A1A1A',
   },
   logoContainer: {
