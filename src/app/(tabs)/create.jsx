@@ -7,11 +7,13 @@ import { StyleSheet, View, Text, Alert, Image, TouchableOpacity, ScrollView, Pla
 import { icons } from "../../constants";
 import { createPost } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { ModernFormField, LongTextFormField } from "../../components"
+import { ModernFormField, LongTextFormField } from "../../components";
+import { checkImageContent } from "../../services/imageContentAPI";
 
 const Create = () => {
   const { user } = useGlobalContext();
   const [uploading, setUploading] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [errors, setErrors] = useState({});
   const [form, setForm] = useState({ title: "", thumbnail: null, description: "" });
 
@@ -21,11 +23,24 @@ const Create = () => {
     });
 
     if (!result.canceled) {
-      setForm({
-        ...form,
-        thumbnail: result.assets[0],
-      })
-      setErrors({ ...errors, thumbnail: null })
+      try {
+        setChecking(true);
+        await checkImageContent(result.assets[0].uri);
+
+        setForm({
+          ...form,
+          thumbnail: result.assets[0],
+        });
+        setErrors({ ...errors, thumbnail: null });
+      } catch (error) {
+        Alert.alert(
+          "Imagem Imprópria",
+          error.message,
+          [{ text: "OK" }]
+        );
+      } finally {
+        setChecking(false);
+      }
     }
   }
 
@@ -108,11 +123,17 @@ const Create = () => {
                     style={styles.overlayIcon}
                     resizeMode="contain"
                   />
-                  <Text style={styles.overlayText}>Trocar Imagem</Text>
+                  <Text style={styles.overlayText}>
+                    { checking ? 'Verificando...' : 'Trocar Imagem' }
+                  </Text>
                 </View>
               </>
             ) : (
               <View style={styles.uploadPlaceholder}>
+                { checking ? (
+                  <ActivityIndicator  />
+                ) : (
+                  <>
                 <Image
                   source={icons.cameraicon}
                   style={styles.uploadIcon}
@@ -124,7 +145,9 @@ const Create = () => {
                 <Text style={styles.uploadSubtext}>
                   PNG, JPG ou JPEG
                 </Text>
-              </View>
+                </>
+            )}
+            </View>
             )}
           </TouchableOpacity>
           {errors.thumbnail && (
