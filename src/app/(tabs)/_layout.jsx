@@ -92,6 +92,9 @@ const TabLayout = () => {
               headerStyle: {
                 backgroundColor: THEME.colors.background,
               },
+              headerTitleStyle: {
+                fontFamily: 'Poppins-SemiBold',
+              },
               tabBarIcon: ({ color, focused }) => (
                 <TabIcon
                   icon={tab.icon}

@@ -1,29 +1,71 @@
 import React, { useState } from 'react';
-import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-
+import { View, ScrollView, Text, Image, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import moment from 'moment-timezone';
 import useAppwrite from '../../lib/useAppwrite';
 import { getAllArticles } from '../../lib/appwrite';
 import { ArticleDetailModal } from '../../components';
 
+const CATEGORIES = [
+  { id: 'all', label: 'Todos' },
+  { id: 'Consumo Consciente', label: 'Consumo Consciente' },
+  { id: 'Impactos Ambientais', label: 'Impactos Ambientais' },
+  { id: 'Condições de Trabalho', label: 'Condições de Trabalho' },
+  { id: 'Economia', label: 'Economia' },
+  { id: 'Tecnologia', label: 'Tecnologia' },
+  { id: 'Brasil', label: 'Brasil' },
+];
+
 const ArticleList = () => {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const {data: articles, refetch} = useAppwrite(getAllArticles);
-
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [refreshing, setRefreshing] = useState(false);
+
+  // Buscar todos os artigos de uma vez
+  const { data: allArticles = [], isLoading, refetch } = useAppwrite(() => getAllArticles([]));
+
+  // Filtrar localmente baseado na categoria selecionada
+  const filteredArticles = allArticles.filter(article => 
+    selectedCategory === 'all' || article.category === selectedCategory
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  }
+    try {
+      await refetch();
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const handleCategoryPress = (categoryId) => {
+    setSelectedCategory(categoryId);
+  };
 
   const handleArticlePress = (article) => {
     setSelectedArticle(article);
     setModalVisible(true);
   };
+
+  const CategoryButton = ({ category }) => (
+    <TouchableOpacity
+      style={[
+        styles.categoryButton,
+        selectedCategory === category.id && styles.categoryButtonActive
+      ]}
+      onPress={() => handleCategoryPress(category.id)}
+    >
+      <Text
+        style={[
+          styles.categoryButtonText,
+          selectedCategory === category.id && styles.categoryButtonTextActive
+        ]}
+      >
+        {category.label}
+      </Text>
+    </TouchableOpacity>
+  );
 
   const renderArticle = ({ item }) => {
     return (
@@ -31,11 +73,15 @@ const ArticleList = () => {
         style={styles.articleContainer}
         onPress={() => handleArticlePress(item)}
       >
-        {/* Container principal do artigo */}
         <View style={styles.articleContent}>
-          {/* Cabeçalho com título e metadados */}
           <View style={styles.headerContainer}>
-            <Text style={styles.title} numberOfLines={2}>
+            <View style={styles.categoryTag}>
+              <Text style={styles.categoryTagText}>
+                {CATEGORIES.find(cat => cat.id === item.category)?.label || 'Geral'}
+              </Text>
+            </View>
+            
+            <Text style={styles.title} numberOfLines={3}>
               {item.title}
             </Text>
 
@@ -43,7 +89,7 @@ const ArticleList = () => {
               <View style={styles.metaItem}>
                 <Feather name="calendar" size={14} color="#666" />
                 <Text style={styles.metaText}>
-                  {moment.tz(item.$createdAt, 'America/Sao_Paulo').format('DD/MM/YYYY HH:mm')}
+                  {moment(item.$createdAt).format('DD/MM/YYYY HH:mm')}
                 </Text>
               </View>
               
@@ -54,16 +100,14 @@ const ArticleList = () => {
             </View>
           </View>
 
-          {/* Preview do conteúdo do artigo */}
           <Text style={styles.content} numberOfLines={5}>
             {item.introduction}
           </Text>
 
-          {/* Imagem do artigo (se existir) */}
           {item.thumbnail && (
             <View style={styles.imageContainer}>
               <Image
-                source={{ uri: item.thumbnail}}
+                source={{ uri: item.thumbnail }}
                 style={styles.image}
                 resizeMode="cover"
                 loadingIndicatorSource={<ActivityIndicator />}
@@ -73,7 +117,6 @@ const ArticleList = () => {
           )}
         </View>
 
-        {/* Botão "Ler mais" */}
         <View style={styles.readMoreContainer}>
           <Text style={styles.readMoreText}>Ler mais</Text>
           <Feather name="chevron-right" size={16} color="#ea88e6" />
@@ -82,10 +125,30 @@ const ArticleList = () => {
     );
   };
 
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#ea88e6" />
+      </View>
+    );
+  }
+
   return (
     <>
+      <View style={styles.categoriesContainer}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.categoriesScrollContent}
+        >
+          {CATEGORIES.map((category) => (
+            <CategoryButton key={category.id} category={category} />
+          ))}
+        </ScrollView>
+      </View>
+
       <FlatList
-        data={articles}
+        data={filteredArticles}
         renderItem={renderArticle}
         keyExtractor={(item) => item.$id}
         contentContainerStyle={styles.listContainer}
@@ -95,7 +158,7 @@ const ArticleList = () => {
         ListEmptyComponent={() => (
           <View style={styles.emptyContainer}>
             <Feather name="inbox" size={48} color="#666" />
-            <Text style={styles.emptyText}>Nenhum artigo encontrado</Text>
+            <Text style={styles.emptyText}>Nenhum artigo encontrado nesta categoria</Text>
           </View>
         )}
       />
@@ -110,6 +173,70 @@ const ArticleList = () => {
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  categoriesContainer: {
+    backgroundColor: '#fff',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  categoriesScrollContent: {
+    paddingHorizontal: 16,
+    gap: 8,
+  },
+  categoryButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: '#f5f5f5',
+    minWidth: 80,
+    alignItems: 'center',
+  },
+  categoryButtonActive: {
+    backgroundColor: '#ea88e6',
+  },
+  categoryButtonText: {
+    fontSize: 14,
+    color: '#666',
+    fontFamily: 'Poppins-Medium'
+  },
+  categoryButtonTextActive: {
+    color: '#fff',
+  },
+  listContainer: {
+    padding: 16,
+    paddingBottom: 80,
+  },
+  articleContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 16,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  categoryTag: {
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+  },
+  categoryTagText: {
+    fontSize: 12,
+    color: '#666',
+    fontWeight: '500',
+  },
   listContainer: {
     padding: 16,
     paddingBottom: 80,

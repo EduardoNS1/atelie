@@ -231,12 +231,15 @@ export async function getUserPosts(userId) {
 }
 
 // Função para obter todos os artigos
-export async function getAllArticles() {
+export async function getAllArticles(queries = []) {
   try {
+    const defaultQueries = [Query.orderDesc("$createdAt")];
+    const finalQueries = [...queries, ...defaultQueries];
+
     const articles = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.articlesCollectionId,
-      [Query.orderDesc("$createdAt")]
+      finalQueries
     );
 
     return articles.documents;
