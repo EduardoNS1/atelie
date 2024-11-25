@@ -83,7 +83,6 @@ const SignUp = () => {
             value={form.email}
             placeholder="Digite seu e-mail"
             handleChangeText={(text) => setForm(prev => ({ ...prev, email: text }))}
-            keyboardType="email-address"
             autoCapitalize="none"
           />
           <FormField 

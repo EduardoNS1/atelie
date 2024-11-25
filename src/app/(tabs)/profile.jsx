@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, Image, FlatList, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from "react-native";
 
 import { Feather } from '@expo/vector-icons';
 import useAppwrite from "../../lib/useAppwrite";
 import { getUserPosts, signOut, deletePost } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
-import { InfoBox, PostCard } from "../../components";
+import { ProfileHeader, PostCard } from "../../components";
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
@@ -63,7 +63,7 @@ const Profile = () => {
           style={styles.deleteButton}
           onPress={() => handleDeletePost(item.$id)}
         >
-          <Feather name="trash-2" size={24} color="#ff4444" />
+          <Feather name="trash-2" size={24} color="#131313" />
         </TouchableOpacity>
       </View>
     );
@@ -87,37 +87,11 @@ const Profile = () => {
                 </View>
               )}
               ListHeaderComponent={() => (
-                <View style={styles.headerContainer}>
-                <TouchableOpacity
-                  onPress={logout}
-                  style={styles.logoutButton}
-                >
-                  <Feather name="log-out" size={28} color="#666" />
-                </TouchableOpacity>
-
-                <View style={styles.avatarContainer}>
-                  <Image
-                    source={{ uri: user?.avatar }}
-                    style={styles.avatar}
-                    resizeMode="cover"
-                  />
-                </View>
-
-                <InfoBox
-                  title={user?.username}
-                  containerStyles={styles.infoBoxContainer}
-                  titleStyles={styles.infoBoxTitle}
+                <ProfileHeader 
+                  user={user}
+                  posts={posts}
+                  onLogout={logout}
                 />
-
-                <View style={styles.statsContainer}>
-                  <InfoBox
-                    title={posts.length || 0}
-                    subtitle="Posts"
-                    titleStyles={styles.infoBoxTitle}
-                    containerStyles={styles.postsContainer}
-                  />
-                </View>
-              </View>
               )}
               contentContainerStyle={styles.contentContainer}
             />
@@ -190,19 +164,10 @@ const styles = StyleSheet.create({
  },
  deleteButton: {
    position: 'absolute',
-   top: 10,
-   right: 10,
+   top: 28,
+   right: 20,
    backgroundColor: 'rgba(255, 255, 255, 0.9)',
    padding: 8,
-   borderRadius: 20,
-   elevation: 2,
-   shadowColor: "#000",
-   shadowOffset: {
-     width: 0,
-     height: 2,
-   },
-   shadowOpacity: 0.25,
-   shadowRadius: 3.84,
  },
  loadingContainer: {
   flex: 1,

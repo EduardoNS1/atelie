@@ -36,7 +36,7 @@ const SignIn = () => {
           <View style={styles.imageView}>
             <Image
               source={images.signin}
-              style={{ width: 600, height: 190 }}
+              style={{ width: 600, height: 200 }}
               resizeMode="contain"
             />
           </View>
@@ -50,7 +50,6 @@ const SignIn = () => {
               value={form.email}
               placeholder="Endereço e-mail"
               handleChangeText={(e) => setForm({ ...form, email: e })}
-              keyboardType="email-address"
               autoCapitalize="none"
             />
             <FormField 
@@ -95,13 +94,15 @@ const styles = StyleSheet.create({
   },
   imageView: {
     alignItems: 'center',
-    flex: 1 
+    flex: 1,
+    marginTop: 20,
   },
   defaultMainText: {
     fontFamily: 'Poppins-Bold',
     width: '100%',
     color: '#000000',
     fontSize: 28,
+    marginTop: 20,
     marginBottom: 10
   },
   defaultText: {

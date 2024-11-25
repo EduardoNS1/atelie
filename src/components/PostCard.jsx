@@ -39,7 +39,6 @@ const PostCard = ({ title, creator, avatar, thumbnail, description, createdAt })
                 </Text>
               </LinearGradient>
             )}
-            <View style={styles.onlineIndicator} />
           </View>
 
           <View style={styles.userMetadata}>
@@ -156,17 +155,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#FFFFFF',
-  },
-  onlineIndicator: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#4CAF50',
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
   },
   userMetadata: {
     marginLeft: 12,

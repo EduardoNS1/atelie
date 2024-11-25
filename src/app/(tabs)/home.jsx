@@ -96,10 +96,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   welcomeText: {
+    marginTop: 20,
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
     color: '#666',
-    marginBottom: 4,
   },
   usernameText: {
     fontSize: 24,

@@ -95,7 +95,7 @@ const LongTextFormField = ({ title, value, placeholder, handleChangeText, maxLen
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
+    marginBottom: 1,
   },
   inputContainer: {
     position: 'relative',
